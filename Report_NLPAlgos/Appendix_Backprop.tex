@@ -1,0 +1,127 @@
+
+\section{APPENDIX: Training Neural Networks} \label{app:Appendix_Backprop}
+
+The \textbf{backward propagation of errors} is a method used for training neural network to learn values for the parameters, and is used in conjunction with an optimization method, such as \textbf{gradient descent}. The backward propagation algorithm does a two-phase cycle consisting of error propagation across the graph followed by the parameter weight update.
+
+Neural network training consists of three phases: 1) forward propagation, 2) error calculation, and 3) backward propagation, which itself consists of two phases. To describe this process, we use notation from Gibiansky (2014) and define the following:
+
+\begin{itemize}
+    \item $x_i^l$ is the input to the $i$-th in layer $l$, denoted $u_i^l$.
+    
+    \item $u_i^l$ is the $i$-th \textbf{unit} or \textbf{node} in layer $l$, where $u_i^0$ with $l=0$ means the $i$-th unit in the input layer.
+    
+    \item $u^L$ is the last (output) layer $L$ of the network.
+    
+    \item $a_i^l$ is the output \textbf{activation} value of unit $u_i^l$, calculated from a nonlinearity function. 
+    
+    \item $a^L$ is the \textbf{activation} value in the last layer $L$.
+    
+\end{itemize}
+
+
+A \textbf{fully-connected neural network} with $L$ layers has three categories of layers: 
+
+\begin{enumerate}
+    \item the \textbf{input } or \textbf{embedding layer} with units $u_i^0$ whose values are determined by the input vectors.
+    
+    \item the \textbf{hidden layers} with units $u_i^l$ whose values are obtained from previous layers.
+    
+    \item the \textbf{output layer} with units $u_i^L$ whose values are computed from the last hidden layer.
+\end{enumerate} 
+
+The neural network trains to update its weight matrix $W = \Big \{ w_{ij}^l \Big \}$, where $w_{ij}^l$ is the weight value from unit $u_i^l$'s output to another unit $u_j^{l+1}$. Whenever an output is computed from an input, a \textbf{nonlinearity function} $\sigma(\cdot)$ is applied to the input $x$ and this is intuitively seen as ``passing" the input through a layer.
+
+
+\subsection{Forward Propagation} \label{sec:ForwardProp}
+
+\textbf{Forward propagation} or \textbf{forward pass} is the procedure used to propagate an input vector forward through the network layers. The original input is transformed over a series of nonlinear functions to get its activation values $a_i^l$, until the output layer is reached, where the activations are transformed via another nonlinearity to get the final activations $a^L$. 
+
+\subsubsection{Forward Propagation Algorithm}
+
+The \textbf{forward propagation} algorithm is described as follows: 
+
+\begin{enumerate}
+    \item Compute the activation values $a_i^l$ for layers with known inputs, using the activation nonlinearity function $\sigma(\cdot)$: 
+    $$
+    a_i^l = \sigma(x_i^l) + I_i^l
+    $$
+    
+    \item Compute the input values $x_i^l$ for the next layer $l$ from the activations $a_i^l$: 
+    $$
+    x_i^l = \sum_j w_{ji}^{l-1} a_j^{l-1}
+    $$
+    
+    \item Steps $1$ and $2$ are repeated until the output layer is reached, to get the final output values $a^L$ at the last layer $L$.
+\end{enumerate}
+
+
+\subsection{Error Calculation} \label{sec:ErrorCalc}
+
+After \textbf{forward propagation}, errors $E(a^L)$ are computed by comparing the network's output with the target predictions, via a loss function, and the error value is calculated for each neuron in the output layer. 
+
+The derivative of the error $E(a^L)$ with respect to computed activations $a_i^L$ is written $\frac {d} {d a_i^L} \Bigg( E(a^L) \Bigg)$ and depends only on the activations. This will be used to optimize the weights to minimize the error in the \textbf{backward propagation algorithm}.
+    
+
+\subsection{Backward Propagation} \label{sec:BackwardProp}
+
+\textbf{Backward propagation} consists of a first phase when the error values are propagated backwards across the graph, starting from the output layer and moving back over the input layer, until each neuron is updated with the error value. Backpropagation uses these errors to \emph{calculate the gradient of the loss function with respect to the weights in the network}. In the second phase, the gradient of the loss is passed as an argument to the optimization method so that the parameter weights can be adjusted, towards minimizing the loss function. 
+
+\subsubsection{Derivation of Backward Propagation}
+
+In order to use an \textbf{optimization algorithm} to train the network, we must compute the error derivative $\frac {\partial E} {\partial w_{ij}^l} $ with respect to each weight value, $w_{ij}^l$, using the chain rule. 
+
+Also, since $x_i^l = \sum_j w_{ji}^{l-1} a_j^{l-1}$, the partial derivative with respect to any weight is equal to just the activation from the origin neuron: $\frac {\partial x_j^{l+1}} {\partial w_{ij}^l} = a_i^l$, resulting in:
+
+$$
+\frac {\partial E} {\partial w_{ij}^l} 
+= \frac {\partial E} {\partial x_j^{l+1} } \cdot \frac {\partial x_j^{l+1}} {\partial w_{ij}^l} 
+= \frac {\partial E} {\partial x_j^{l+1} } \cdot a_i^l
+$$
+
+Now, to decompose further the partial $\frac {\partial E} {\partial x_j^{l+1} }$, we can calculate the partial derivative of the error with respect to the input for the current layer $l$. Using the chain rule and $a_i^l = \sigma(x_i^l) + I_i^l$, we write:
+$$
+\frac {\partial E} {\partial x_j^l } = \frac {\partial E} {\partial a_j^l } \cdot \frac {\partial a_j^l} {\partial x_j^l }
+= \frac {\partial E} {\partial a_j^l } \cdot  \frac {\partial} {\partial x_j^l } \Big( \sigma(x_j^l) + I_j^l \Big)
+= \frac {\partial E} {\partial a_j^l }\cdot \sigma '(x_j^l)
+$$
+
+Lastly, to decompose the partial $\frac {\partial E} {\partial a_j^l }$, we consider two cases: if we are at the output layer, so $l = L$, or not. When $l = L$, then the partial $\frac {\partial E} {\partial a_j^l }$ is simply the derivative of the error function because the error is just a function of $a_i^L$ and none of the other activations in the output layer: 
+
+$$
+\frac {\partial E} {\partial a_j^L } = \frac {\partial} {\partial a_j^L } \Big( E(a^L) \Big)
+$$
+
+In the second case, for layers $l$ other than the output layer $L$, we must use the chain rule to sum over all the contributions of the activation in all layers. 
+$$
+\frac {\partial E} {\partial a_j^l } = \sum \frac {\partial E} {\partial x_j^{l+1} } \cdot \frac {\partial x_j^{l+1}} {\partial a_i^l }
+= \sum \frac {\partial E} {\partial x_j^{l+1} } \cdot w_{ij}
+$$
+
+This shows that $\frac {\partial E} {\partial a_j^l }$ equals the derivatives of the inputs to the next layer weighted by the importance of the activation $a_i^l$ to each input. Intuitively, this means ``the error at a particular node in layer $l$ is a combination of errors at the next nodes (layer $l+1$), weighted by the size of the contribution of the node in layer $l$ to each of those nodes in layer $l+1$" (Gibiansky, 2014). 
+
+\subsubsection{Backward Propagation Algorithm}
+
+\begin{enumerate}
+    \item Calculate the errors at the output layer $L$, with respect to the activations $a_i^L$ at the output layer: 
+    $$
+    \frac{\partial E}{\partial a_i^L} = \frac{d}{d a_i^L} \Big( E(a^L) \Big)
+    $$
+    
+    \item Calculate the partial derivative of the error with respect to the neuron input $\frac{\partial E}{\partial x_j^l}$ (also denoted ``deltas") at an arbitrary layer $l$:
+    $$
+    \frac{\partial E}{\partial x_j^l} = \sigma ' (x_j^l) \cdot  \frac{\partial E}{\partial a_j^l}
+    $$
+    
+    \item Calculate errors at the previous layer (this is called backpropagating the errors):
+    $$
+    \frac{\partial E}{\partial a_i^l} = \sum w_{ij}^l \cdot \frac{\partial E}{\partial x_j^{l+1} }
+    $$
+    
+    \item Repeat Steps $2$ and $3$ until the deltas are known for all layers excluding the input layer. 
+    
+    \item Complete the steps by calculating the gradient of the error with respect to the weights: 
+    $$
+    \frac{\partial E}{\partial w_{ij}^l} = a_i^l \cdot \frac{\partial E}{\partial x_j^{l+1}}
+    $$
+    Intuitively, this means to find derivatives with respect to weights in a given layer, we multiply activations for that layer and deltas for the next layer, so deltas for the input layer never need to be calculated. 
+\end{enumerate}

@@ -1,0 +1,15 @@
+\section{ERNIE 1.0} \label{sec:ERNIE_1}
+
+\subsection{Motivation for ERNIE 1.0}
+
+Previous models like \nameref{sec:Word2Vec}, \nameref{sec:Glove}, and \nameref{sec:BERT} create word vector representations only through surrounding contexts, not also through prior knowledge in the sentence, and thus fail to capture relations between entities in a sentence. Consider the following training sentence: 
+
+``Harry Potter is a series of fantasy novels written by J. K. Rowling."
+
+Using co-occurring words ``J.", ``K.", and ``Rowling", BERT can is limited to predicting the token ``K." but utterly fails at capturing knowledge relation to the whole entity \emph{J. K. Rowling}. In contrast, \textbf{ERNIE} goes a step further: it extrapolates the relationship between \emph{Harry Potter} entity and \emph{J. K. Rowling} entity using implicit knowledge of words and entities. More specifically, ERNIE uses their relationship to predict that \emph{Harry Potter} is a novel series written by J. K. Rowling (Sun et al., 2019). 
+
+
+
+% ------------------------------------------------------------
+
+\section{ERNIE 2.0} \label{sec:ERNIE_2}

@@ -1,0 +1,101 @@
+\section{XLNet} \label{sec:XLNet}
+
+While most commonly in NLP models are in the form of neural networks that are pretrained on large, unlabeled data and then fine-tuned for specific tasks, different unsupervised pretraining loss functions have also been explored. From these, \textbf{autoregressive (AR) \hyperref[sec:LanguageModels]{language modeling} } and \textbf{autoencoding (AE) \hyperref[sec:LanguageModels]{language modeling} } have been the most powerful pretraining objectives. 
+
+\subsection{autoregressive language model (AR)}\label{sec:autoregressiveLM}
+
+From Yang et al. (2020), an \textbf{autoregressive \hyperref[sec:LanguageModels]{language model} (AR)} \emph{autoregressively} estimates the probability distribution of a text sequence $\textbf{x} = \Big\{ x_1,...,x_T \Big\}$. The AR model factorizes the likelihood into a forward product, $P(\textbf{x}) = \prod_{t=1}^T P \Big(x_t \; | \; \textbf{x}_{< t} \Big)$, using tokens before a timestep, or a backward product, $P(\textbf{x}) = \prod_{t=T}^1 P \Big(x_t \; | \; \textbf{x}_{> t} \Big)$, using tokens after a timestep. Then, a \hyperref[sec:NeuralLM]{neural network} is trained to model either conditional distribution. But due to AR's unidirectional context, it cannot model bidirectional contexts, and thus performs poorly for downstream \hyperref[app:Appendix_NLPTasks]{nlp tasks}. 
+
+\subsection{autoencoding language model (AE)}\label{sec:autoencodingLM}
+
+An \textbf{autoencoding \hyperref[sec:LanguageModels]{language model} (AE)} recreates original data from corrupted input, like \nameref{sec:BERT}. Given a input sequence, some tokens are randomly masked and the model must guess the correct tokens. Since AE modeling does not estimate densities, it can learn bidirectional contexts. 
+
+
+\subsection{Problems With BERT}
+
+From Yang et al. (2020), a \emph{forward} \nameref{sec:autoregressiveLM} maximizes the likelihood of an input sequence by using a forward autoregressive using a \emph{forward} autoregressive decomposition: 
+$$
+\textit{max}_\theta \Bigg( \textit{log}  \; P_\theta(\textbf{x})  \Bigg) = \sum_{t=1}^T \textit{log} \; P_\theta \Big(x_t \; | \; \textbf{x}_{< t} \Big)  
+$$
+
+Meanwhile, \nameref{sec:autoencodingLM}s like \nameref{sec:BERT} takes an input sequence $\textbf{x}$, and corrupts it $\hat{\textbf{x}}$ by masking some tokens. Let $\overline{\textbf{x}}$ denote only masked tokens. Then the autoencoding's objective is to recreate the masked tokens $\overline{\textbf{x}}$ from the corrupted input $\hat{\textbf{x}}$: 
+$$
+\textit{max}_\theta \Bigg( \textit{log}  \; P_\theta(\overline{\textbf{x}} \; | \; \hat{\textbf{x}})  \Bigg) \;\; \mathlarger{\mathlarger{\approx}} \;\; \sum_{t=1}^T m_t \; \textit{log} \; P_\theta \Big(x_t \; | \; \hat{\textbf{x}} \Big) 
+$$
+where $m_t = 1$ indicates that the input token $x_t$ is masked. 
+
+With this in mind, Yang et al. (2020) note \nameref{sec:BERT}'s problems as follows: 
+\begin{enumerate}
+    \item \textbf{Independence Assumption: } the $\approx$ approximation sign in the last equation indicates that \nameref{sec:BERT} factorizes the joint conditional probability $P_\theta(\overline{\textbf{x}} \; | \; \hat{\textbf{x}})$ assuming that all masked tokens $\overline{\textbf{x}}$ are rebuilt independently of each other, even though long-range dependencies are the norm. 
+    
+    \item \textbf{Data Corruption}: Artificial symbols like masking tokens used in \nameref{sec:BERT}'s pretraining \nameref{sec:maskedlanguagemodelMLM} task do not appear in real data during fine-tuning, causing a discrepancy between pre-training and fine-tuning. 
+\end{enumerate}
+
+Kurita (2019b) gives an example to show how BERT predicts tokens independently. Consider the sentence: 
+
+``I went to the \texttt{[MASK]} \texttt{[MASK]} and saw the \texttt{[MASK]} \texttt{[MASK]} \texttt{[MASK]}." 
+
+Two ways to fill this are: 
+
+``I went to \emph{New York} and saw the \textit{Empire State building}," or
+
+``I went to \emph{San Francisco} and saw the \emph{Golden Gate bridge}."
+
+But \nameref{sec:BERT} might incorrectly predict something like: ``I went to \emph{San Francisco} and saw the \emph{Empire State building}." 
+
+Since \nameref{sec:BERT} predicts masked tokens simultaneously, it fails to learn their interlocking dependencies, which weakens the ``learning signal." This is a major point against \nameref{sec:BERT}, since even simple \hyperref[sec:LanguageModels]{language models} can learn at least unidirectional word dependencies (Kurita, 2019b). 
+
+
+
+\subsection{Motivation for XLNet}
+
+Confronted with \nameref{sec:BERT}'s limitations, Yang et al. (2020) conceived \textbf{XLNet} which seeks to keep the benefits of \emph{both} \hyperref[sec:autoencodingLM]{autoencoding} and \hyperref[sec:autoregressiveLM]{autoregressive} language modeling while avoiding their issues: 
+
+\begin{enumerate}
+    \item Firstly, XLNet's use of an \nameref{sec:autoregressiveLM} objective function lets the probability $P_\theta(\textbf{x))}$ be factored using the probability product rule, which holds \emph{universally} without having to default to \nameref{sec:BERT}'s false \emph{independence assumption}. 
+    
+    \item  Secondly, XLNet uses a \textbf{\hyperref[sec:permutationLM]{permutation language model}} which can capture bidirectional context. 
+    
+\end{enumerate}
+
+
+
+
+Also, XLNet improves over \nameref{sec:TransformerXL} when incorporating its \hyperref[sec:SegmentLevelRec]{segment-level recurrence mechanism} and \hyperref[sec:RelativePosEnc]{relative positional encodings} to learn longer-spanning dependencies. 
+
+\subsection{Describing XLNet}
+
+
+\subsubsection{Permutation Language Model} \label{sec:permutationLM}
+
+Can a model be trained to use \textbf{bidirectional context} while avoiding masking and its resulting problem of independent predictions?
+
+To this scope, Yang et al. (2020) built XLNet with a \textbf{permutation language model}. Like  \hyperref[sec:LanguageModels]{language model}s, a \textbf{permutation language model} predicts unidirectionally, but instead of predicting in order, the model predicts tokens in a random order. 
+
+Formally, for an input sequence $\textbf{x} = \Big\{ x_1,..., x_T \Big\}$, a permutation model uses that fact that there are $T!$ orders to factorize autoregressively, so assuming model parameters were shared across all these factorization orders then it would be expected that the model could accumulate forward \emph{and} backward information (Yang et al., 2020). In other words, A permutation language model is forced to accumulate bidirectional context by finding dependencies between all possible input combinations. For example: 
+
+``I like cats more than dogs." 
+
+A traditional \hyperref[sec:LanguageModels]{language model} would predict the individual words sequentially, using previous tokens as context. But a permutation language model randomly samples prediction order, such as:
+
+``cats", ``than", ``I", ``more", ``dogs", ``like"
+
+where ``than could be conditioned on ``cats" and ``I" might be conditioned on seeing ``cats, than", etc (Kurita, 2019b). 
+
+
+
+\textbf{NOTE: } the permutation language model only permutes factorization order; it does not change word order in the input sequence, only the order in which words are predicted. 
+XLNet still builds ``target-aware" predictions: input tokens can be fed in arbitrary order into XLNet using a masking feature in the \nameref{sec:Transformer}'s \hyperref[sec:AttentionMechanism]{attention} to temporarily cover certain tokens. Coupled with the use of \hyperref[sec:PosEncodings]{positional embeddings} and their associated original sequences, XLNet will still receive the tokens in correct order (Kurita, 2019b). This improves upon previous versions of permutation models which relied on ``implicit position awareness" resulting from their own structures (Yang et al., 2020). 
+
+
+
+
+\subsubsection{Two-Stream Self-Attention }
+
+
+\subsubsection{Relative Segment Encodings}
+
+
+\subsection{Experimental Results of XLNet}
+
+* Say the NEW YORK log likelihood example formulation

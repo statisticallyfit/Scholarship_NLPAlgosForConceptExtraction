@@ -1,0 +1,30 @@
+\section{Introduction: Motivation for Text Processing} \label{sec:Introduction} 
+
+Vast amounts of knowledge are trapped in presentation media such as videos, html, pdfs, and paper as opposed to being concept-mapped, interlinked, addressable and reusable at fine grained levels. This defeats knowledge exchanges between humans and between human cognition and AI-based systems.
+
+It is known that concept mapping enhances human cognition. Especially in domain-specific areas of knowledge, better interlinking would be achieved if concepts would be extracted using surrounding context, accounting for \hyperref[sec:Polysemy]{polysemy} and key phrases. ``You shall know a word by the company it keeps" (Firth, 1957). 
+
+In my project I seek to understand models that create good language representations using lexical and semantic structure, at the \emph{\hyperref[nlptask:namedentityrecognitionNER]{entity} and \hyperref[nlptask:keyphraseextraction]{phrase} level}. 
+
+Previous count-based models like \nameref{sec:Glove} and \nameref{sec:Word2Vec} motivated recent models like models like \nameref{sec:Transformer}, \nameref{sec:ELMo}, \nameref{sec:BERT}, \nameref{sec:TransformerXL}, \nameref{sec:XLNet}, and \nameref{sec:ERNIE_2} to move beyond simple co-occurrence counts to extract meaning. \nameref{sec:ERNIE_2} instead ``broadens the vision to include more lexical, syntactic and semantic information from training corpora in form of named entities (like person names, location names, and organization names), semantic closeness (proximity of sentences), sentence order or discourse relations" (Sun et al., 2019). For instance, \nameref{sec:ERNIE_1} can associate entire entity names with other terms in a given sentence, while on the same data, \nameref{sec:BERT} lacks this ability.
+
+\emph{\textbf{Aims of this Research}}
+\vspace{-7pt}
+\begin{enumerate}
+    \item "Study:" I will inventory, study, and compare architectures and frameworks to learn how they leverage entities,  \hyperref[sec:Polysemy]{polysemy} and contextual meaning for future study in concept extraction and natural language understanding.
+    
+    \item "Application:" using the PyTorch deep learning library, I aim to illustrate key model architecture while applying the model  to \nameref{nlptask:machinetranslationMT}.
+\end{enumerate}
+ 
+ 
+ 
+\textbf{Statement of Authorship: }
+
+This report is planned and written entirely by me, and I cite authors of each model, where applicable. I learned from and adapted the PyTorch Code for the \nameref{nlptask:machinetranslationMT}task using GitHub. 
+
+%\emph{\textbf{Layout of this Report}}
+
+%\hyperref[sec:WordEmbeddings]{Section 1} of this report defines and examines usage of word embeddings in NLP; \hyperref[sec:LanguageModels]{Section 2} explains basic building blocks of the forthcoming models, and the latter sections discuss the different models: \nameref{sec:Word2Vec}, \nameref{sec:Glove}, \nameref{sec:Seq2Seq}, \nameref{sec:Transformer}, \nameref{sec:ELMo}, \nameref{sec:BERT}, \nameref{sec:TransformerXL}, \nameref{sec:XLNet}, and \nameref{sec:ERNIE}. 
+
+
+

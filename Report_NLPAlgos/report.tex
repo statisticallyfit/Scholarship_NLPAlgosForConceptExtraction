@@ -1,0 +1,100 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{macros-ohp}
+
+
+%Please make sure the tex is compiled twice to have all the background images displayed correctly.
+
+\title{\Huge 
+\textbf{ Study and Application of Concept-Extraction Algorithms in Statistical and Programming Sciences}
+}
+
+\author{
+\Huge  Ana-Maria Vintila\\
+	\Large Supervised by  Professor Brenda Vo \\
+	\Large  University of New England, Australia\\
+}
+\date{}
+
+% Ana
+% My line spacing for the title page: 
+%\linespread{1.0}  % was 1.5
+
+\begin{document}
+	\begin{titlingpage}
+	
+	
+	% Ana: set up animation settings -----------------
+   %\animategraphics[autoplay,loop,height=5cm]{1}{imgs/rnn_step1_animation.png}{0}{47-1}
+	
+	% Ana: Making linespread on title page larger
+	\linespread{1.5}
+	\tikz[remember picture,overlay] \node[opacity=1,inner sep=0pt] at (current page.center){\includegraphics[width=\paperwidth,height=\paperheight]{imgs/background.png}};
+	\vspace*{3.5cm}
+	{\let\newpage\relax\maketitle}
+	\vspace*{\fill}
+	\begin{textblock*}{140mm}(70mm,200mm)
+			\begin{center}
+				\begin{small}
+		Vacation Research Scholarships are funded jointly by the Department of Education and Training
+and the Australian Mathematical Sciences Institute.
+				\end{small}
+			\end{center}
+	\end{textblock*}
+
+	\end{titlingpage}
+
+
+
+
+
+% Report Start
+\input{Abstract.tex} % done
+
+% Set smaller line spacing for table of contents
+%{\linespread{0.7} \tableofcontents}
+%\renewcommand{\baselinestretch}{0.75}\normalsize
+\tableofcontents
+% Setting line spacing after TBC:
+%\renewcommand{\baselinestretch}{0..9}\normalsize
+
+%\clearpage 
+
+\input{Introduction.tex} % done
+\input{WordEmbeddings.tex}% done
+\input{LanguageModels.tex}% done
+\input{Word2Vec.tex}% done
+\input{GloVe.tex}% done
+\input{Seq2Seq.tex}% done
+\input{Transformer.tex}% done
+\input{ELMo.tex}% done
+\input{BERT.tex}% done
+\input{TransformerXL.tex}% done
+\input{XLNet.tex}
+\input{ERNIE.tex}
+
+\input{Conclusion.tex}
+\input{References.tex}
+
+\appendix
+\clearpage 
+\input{Appendix_NLPTasks.tex}
+\clearpage
+\input{Appendix_Backprop.tex}
+\clearpage
+\input{Appendix_RNN_LSTM.tex}
+%\clearpage
+%\input{Appendix_Code_SkipGramModel.tex}
+%\clearpage
+%\input{Appendix_Code_CBOWModel.tex}
+\clearpage
+\input{Appendix_Code_SeqToSeqWithAttention.tex}
+
+
+%\clearpage
+%\input{Appendix_Tutorial_TransformerModel.tex}
+%\clearpage
+%\input{Appendix_Tutorial_LSTMFromScratch.tex}
+% ----------------------------------------------------------------
+% Report End
+
+\end{document}

@@ -1,0 +1,62 @@
+\section{Word Embeddings} \label{sec:WordEmbeddings}
+
+Word embeddings, also called latent vector representations, which are fixed-length vector representations of words, have led to the success of many NLP systems in recent years, across tasks like \nameref{nlptask:namedentityrecognitionNER}, \nameref{nlptask:semanticparsingSP}, \nameref{nlptask:postagging}, and \nameref{nlptask:semanticrolelabelingSRL} (Luong et al. 2013, p. 1).
+
+\subsection{Usage of Word Embeddings in Natural Language Processing} \label{sec:WordEmb_Useage}
+
+An important idea in linguistics is that words used in similar ways have similar meanings (Firth, 1957). A distributional view of word meaning arises when accounting for the full distribution of contexts in a corpus where the word is found. For instance, words that tend to occur in the same neighboring context can be clustered to signify they have similar meaning. A key idea in NLP is suggests that information lives in text corpora and people and machines can use programs to collect and organize this information for use in NLP. With the onset of ever-larger text collections on the web, these programs have progressed from count-based statistics to more advanced methods. There are many insights into the power of word embeddings; similar words being close together allows generalization from one sentence to a class of similar sentences. For instance ``the wall is blue" to ``the ceiling is red" (Smith, 2019, p. 4). Put succinctly, ``\hyperref[sec:DistributedRepr]{distributed representations} of words in a vector space help learning algorithms to achieve better performance in \hyperref[app:Appendix_NLPTasks]{natural language processing tasks} by grouping similar words" (Mikolov et al. 2013a, p. 1). 
+
+\subsubsection{Key Concept: Distributed Representation} \label{sec:DistributedRepr}
+
+In a \textbf{distributed representation} of a word, information of that word is distributed across vector dimensions (Lenci, 2018). This is opposed to a local word representation; for neural networks, this means one neuron is active at a time. The $n$-gram model is considered a local representation due to is usage of short context. 
+
+\subsection{Intuitive Definition of Word Embeddings} \label{sec:WordEmb_Intuition}
+
+In the world of natural language processing, word embeddings are a collection of unsupervised learning methods for capturing semantic and syntactic information about individual words in a compact low-dimensional vector representation. Embedding methods analyze text data, learning distributed semantic representations of the vocabulary to capture its co-occurrence statistics. These learned representations are then useful for reasoning about word usage and meaning (Melamud et al. 2016, p. 1). 
+
+Word vectors can be also calculated from sentences, phrases, or characters to create sentence embedding, phrase embedding, or character embedding, respectively. Character embeddings can be used to explain language morphology. For example, the following variants of the word ``would" in social media would have similar character embeddings because they are spelled similarly: ``would", ``wud", ``wld", ``wuld", ``wouldd", ``woud", and so on (Smith, 2019, p. 5). \hyperref[nlptask:tokenization]{Tokenization} is a key step in segmenting text to create word embeddings, as the difference between \nameref{sec:BERT} and \nameref{sec:TransformerXL} will show.  
+ 
+
+\subsubsection{Analogical Reasoning Property of Word Embeddings} \label{sec:WordEmb_AnalogyFeature}
+
+Word embeddings can also represent \hyperref[nlptask:wordanalogy]{analogies} that have been encoded in the difference vectors between words. For example, gender differences can be represented by a constant difference vector, enabling mathematical operations between vectors based on \textbf{\emph{vector space semantics}} (Colah, 2014). The famous \hyperref[nlptask:wordanalogy]{analogy} ``man is to woman as king is to queen" can thus be expressed using learned word vectors as follows: $vector(man) - vector(woman) = vector(king) - vector(queen)$ (Smith, 2019). In the NLP task of \nameref{nlptask:machinetranslationMT}, this property of learned word vectors would suggest the two languages being translated have a similar `shape' and that by forcing them to line up at different points, they overlap and other points get pulled into the right positions" (Colah, 2014).
+
+\subsection{Mathematical Overview For Word Embeddings}
+ 
+A word embedding $W: [Words] \rightarrow R^n$ is a parametrized function mapping words in a language to an $n$-dimensional numeric vector. An example is shown in \cref{fig:exampleWordEmb}:
+
+\begin{figure}[h]
+\vspace{-10pt}
+\centering
+\includegraphics[width=0.65\textwidth]{example_word_embedding.png}
+\vspace{-10pt}
+\caption{\footnotesize Example Word Embeddings. From \emph{Visualizing Neural Machine Translation Mechanics of Seq2Seq Models with Attention}, by Jay Alammar, 2018. \url{http://jalammar.github.io/visualizing-neural-machine-translation-mechanics-of-seq2seq-models-with-attention/}. Copyright 2018 by Jay Alammar.}
+\vspace{-10pt}
+\label{fig:exampleWordEmb}
+\end{figure}
+
+According to Rudolph et al. (2016), ``each term in a vocabulary is associated with two latent vectors, an \emph{embedding} and a \emph{context vector}. These two types of vectors govern conditional probabilities that relate each word to its surrounding context." 
+Rudolph and Blei (2017) note that a word embedding uses vector representations to parameterize the conditional probabilities of words in a surrounding context. 
+In other words, a word's conditional probability combines its \emph{embedding} and \emph{context vectors} of surrounding words, with different methods combining them differently. Subsequently, word embeddings are fitted to given text data by maximizing the conditional probabilities of observed text (Rudolph et al. 2017). 
+
+\subsection{Static Embeddings vs. Contextual Embeddings} \label{sec:StaticVsContextualEmb}
+
+\subsubsection{What is Polysemy?} \label{sec:Polysemy}
+
+\textbf{Polysemy} means that a word can have multiple, distinct meanings. The \textbf{distributional hypothesis} in NLP states that meaning depends on context, and words occurring in the same contexts have similar meaning (Wiedemann et al. 2019). 
+
+\subsubsection{The Problem With Context-Free, Static Embeddings} \label{sec:ProblemWithStaticEmbs}
+
+Classic word vectors, also called \textbf{static embeddings}, represent words in a low-dimensional continuous space in a static way: this means each word has a single word vector representation regardless of its context (Ethayarajh, 2019). \nameref{sec:SkipGram} (Mikolov et al., 2013a) and \nameref{sec:Glove} (Pennington et al., 2014) are well-known algorithms for producing these ``context-independent representations," as Peters et al. (2018) calls them, due to the fact that their word embedding matrix, inputted to a neural network representation, is trained to use co-occurring information in text, rather than using dynamic computation offered by \hyperref[sec:LanguageModels]{language models} (Batista, 2018). Although still able to capture latent syntactic and semantic meaning by training over large corpora, static embeddings by definition create a single vector representation per word, so all senses of a polysemous word are collapsed within a single representation (Ethayarajh, 2019). This can significantly reduce model performance. For instance, the word ``plant" would have an embedding that is the ``average of its different contextual semantics relating to biology, placement, manufacturing, and power generation" (Neelakantan et al., 2015). 
+
+\subsubsection{A Better Solution: Contextual Embeddings To Capture Polysemy} \label{sec:SolutionWithContextEmbs}
+
+In the Annual Review of Linguistics, Lenci (2018) states that ``distributional semantics is a usage-based model of meaning, based on the assumption that the statistical distribution of linguistic items in context plays a key role in characterizing their semantic behavior".
+
+Rudolph et al. (2016) states that ``each data point $i$ has a \emph{context} $c$, which is a set of indices of other data points." Context is also a modeling choice; in different domains, context can differ. In language, the data point is taken to be a word and the context is the sequence of surrounding words. In neural data, the data point is neuron activity at a specific time and context is surrounding neuron activity. In shopping data, the data point refers to a purchase and context can mean other items in a basket (Rudolph et al., 2016). 
+
+A \textbf{contextual word embedding (CWE)} is usually obtained using a \hyperref[sec:BidirectionalLM]{bidirectional language model (biLM)} to capture contextual information using forward and backward history to incorporate surrounding phrases of the word (Antonio, 2019). Typically, a model uses an encoder to process input sequence and squeeze the information into a fixed-length context vector. While word vectors are ``lookup tables", contextual embeddings include type information and \hyperref[sec:NeuralLM]{neural network} parameters to ``contextualize" a word (Smith, 2019). 
+
+Recent efforts to capture polysemy for word embeddings cast aside the idea of using a fixed word sense inventory. This allows contextual embeddings to ``not only create one vector representation for each [word] type in the vocabulary" but to also create separate vectors for each token in a surrounding context. Indeed, experiments show that contextual embeddings can capture word senses successfully (Wiedemann et al., 2019). Wiedemann concludes that this allows for a more realistic model of natural language; contextual embeddings have proven their superiority over static embeddings for many NLP tasks such as text classification (Zampieri et al., 2019) and sequence tagging (Akbig et al., 2018). Although contextualization models such as the \nameref{sec:Transformer}, \nameref{sec:BERT}, \nameref{sec:ELMo}, \nameref{sec:TransformerXL}, \nameref{sec:XLNet}, and \nameref{sec:ERNIE_2} differ widely, modeling ``sentence or context-level semantics together with word-level semantics proved to be a powerful innovation" in the NLP world (Wiedemann et al., 2019). 
+
+
