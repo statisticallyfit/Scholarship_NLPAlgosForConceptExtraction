@@ -1,0 +1,26 @@
+
+
+\section{Sequence-To-Sequence Model}
+
+
+\begin{frame}{Seq-To-Seq Model (Brief Overview)}
+\normalsize 
+    \begin{itemizeSpaced}{7pt}
+        \item Used for machine translation task. \textbf{Encoder} takes in sequence of tokens (words, phrases), processes inputs into a \emph{fixed-length} \textbf{context vector}, and sends it to \textbf{Decoder} that outputs another sequence of tokens. 
+        
+        \item Encoder, Decoder are often RNN's \footnotemark like LSTMs\footnotemark and GRUs\footnotemark. 
+        
+        \item \textbf{Problem: } compressing inputs into \textbf{fixed-length vector} causes \textbf{long-term dependency problem} (memory loss) since only the \emph{last hidden Encoder state is used}. 
+        
+        \item \textbf{Solution: }to use \textbf{attention mechanism} for selectively focusing on parts of the inputs as required (creates a context vector for \emph{each time step or word}, so all Encoder's output hidden states are used in Decoder)
+        
+        
+    \end{itemizeSpaced}
+    
+    \footnotetext[5]{\footnotesize RNN stands for \textbf{recurrent neural network}, which has a looping mechanism to share hidden states. Suffers from \textbf{long-term dependency problem}}
+    
+    \footnotetext[6]{\footnotesize LSTM means \textbf{long-short term memory network}, and uses forget gates to regulate memory and information flow}
+    
+    \footnotetext[7]{\footnotesize GRU means \textbf{gated-recurrent network}, and is a condensed version of LSTM. }
+    
+\end{frame}

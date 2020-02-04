@@ -4,12 +4,257 @@
 
 Previous models like \nameref{sec:Word2Vec}, \nameref{sec:Glove}, and \nameref{sec:BERT} create word vector representations only through surrounding contexts, not also through prior knowledge in the sentence, and thus fail to capture relations between entities in a sentence. Consider the following training sentence: 
 
-``Harry Potter is a series of fantasy novels written by J. K. Rowling."
+{\large \textit{``Harry Potter is a series of fantasy novels written by J. K. Rowling."}}
 
-Using co-occurring words ``J.", ``K.", and ``Rowling", BERT can is limited to predicting the token ``K." but utterly fails at capturing knowledge relation to the whole entity \emph{J. K. Rowling}. In contrast, \textbf{ERNIE} goes a step further: it extrapolates the relationship between \emph{Harry Potter} entity and \emph{J. K. Rowling} entity using implicit knowledge of words and entities. More specifically, ERNIE uses their relationship to predict that \emph{Harry Potter} is a novel series written by J. K. Rowling (Sun et al., 2019). 
+Using co-occurring words ``J.", ``K.", and ``Rowling", BERT can is limited to predicting the token ``K." but utterly fails at recognizing the whole entity \emph{J. K. Rowling}. A model could use simple co-occurrence counts to predict the missing entity \emph{Harry Potter} even without using long contexts, but it would not be making use of the relationship between the novel name and its writer. 
+
+Current NLP models analyzing simple word co-occurrence may miss additional information like sentence order and nearness and named entities. 
+
+
+
+This is where \textbf{ERNIE} steps in. \textbf{ERNIE (Enhanced Representation through Knowledge Integration)} can extrapolate the relationship between the \emph{Harry Potter} entity and \emph{J. K. Rowling} entity using implicit knowledge of words and entities, and uses this relationship to predict that Harry Potter is a series written by J. K. Rowling (Sun et al., 2019a). 
+
+
+
+%\begin{figure}[h]
+%\vspace{-5pt}
+%\centering
+%\includegraphics[width=0.9\textwidth]{imgs/ernie_vs_bert_masking.png}
+%\vspace{-5pt}
+%\captionof{figure}{\footnotesize Conceptual difference between \nameref{sec:BERT}'s masking and ERNIE's masking. From \emph{ERNIE: Enhanced Representation Through Knowledge Integration}, by Sun et al., 2019a. \url{https://arxiv.org/pdf/1904.09223.pdf}. Copyright 2019a by Sun et al.}
+%\vspace{-5pt}
+%\label{fig:ernie_vs_bert_masking}
+%\end{figure}
+
+
+ERNIE leverages a \nameref{sec:Transformer} encoder with \hyperref[sec:SelfAttention]{self-attention} alongside novel knowledge integration techniques like \nameref{sec:entitymasking} and \nameref{sec:phrasemasking} so that prior knowledge contained in conceptual units like phrases and entities can contribute to learning longer semantic dependencies for better model generalization and adaptability (Sun et al., 2019a). 
+
+
+\subsubsection{phrase-level masking}\label{sec:phrasemasking}
+
+A phrase is a ``small group of words of characters together acting as a conceptual unit" (Sun et al., 2019a). ERNIE uses lexical and chunking methods to determine phrase boundaries in sentences. In phrase-level masking, ERNIE randomly selects phrases from the sentences and masks them (as in \cref{fig:ernie_maskingTypes}), so that it can train by predicting the subpieces of the phrase. This way, phrase information can be built into ERNIE's learned word embeddings. 
+
+
+
+\begin{figure}[h]
+\vspace{-5pt}
+\centering
+\includegraphics[width=0.99\textwidth]{imgs/ernie_maskingtypes.png}
+\vspace{-5pt}
+\captionof{figure}{\footnotesize ERNIE uses basic masking to get word representations, followed by phrase-level and entity-level masking. From \emph{ERNIE: Enhanced Representation Through Knowledge Integration}, by Sun et al., 2019a. \url{https://arxiv.org/pdf/1904.09223.pdf}. Copyright 2019a by Sun et al.}
+\vspace{-5pt}
+\label{fig:ernie_maskingTypes}
+\end{figure}
+
+
+\subsubsection{entity-level masking}\label{sec:entitymasking}
+
+Sun et al. (2019a) say that name entities contain ``persons, locations, organizations, products" which can be denoted with a proper name, and can be abstract or have physical existence. Entities often contain important information within a sentence, so are regarded as conceptual units. ERNIE parses a sentence for its named entities, then masks and predicts all slots within the entities, as shown in \cref{fig:ernie_maskingTypes}.
+
+
+\subsection{Experimental Results of ERNIE 1.0}\label{sec:ExperimentalResultsERNIE}
+
+
+
+
+
+% NOTE: the top width must be +0.5 more than below textwidth measure
+\begin{program}
+\begin{wrapfigure}{L}{0.6\textwidth}
+\begin{center}
+    \includegraphics[width=0.55\textwidth]{imgs/ernie_tableResults.png}
+\end{center}
+\vspace{-20pt}
+\captionof{table}{\footnotesize Comparing ERNIE and BERT on five major nlp tasks in Chinese. From \emph{Table 1 in ERNIE: Enhanced Representation Through Knowledge Integration}, by Sun et al., 2019a. \url{https://arxiv.org/pdf/1904.09223.pdf}. Copyright 2019a by Sun et al.}
+\vspace{-5pt}
+\label{tbl:ernie_vs_bert_Results}
+\end{wrapfigure}
+
+As in \cref{tbl:ernie_vs_bert_Results}, ERNIE outperforms \nameref{sec:BERT} by more than $1 \%$ absolute accuracy on five Chinese NLP tasks: \nameref{nlptask:naturallanguageinferenceNLI} (XNLI data), \nameref{nlptask:semantictextualsimilaritySTS} (LCQMC data), \nameref{nlptask:namedentityrecognitionNER} (MSRA-NER data), \nameref{nlptask:sentimentanalysisSA} (ChnSentiCorp data), \nameref{nlptask:questionansweringQA} (NLPCC-DBQA data).
+
+\end{program}
+
+
+
+Sun et al. assert this is because of ERNIE's knowledge integration masking strategies, and this is supported in \cref{tbl:ernie_ablationStudy}; adding phrase masking to basic word-level masking improved ERNIE's performance almost a full percent, and adding entity-level masking to this combination resulted in still higher gains when sampling more data from larger texts. 
+
+
+\begin{figure}[h]
+\vspace{-5pt}
+\centering
+\includegraphics[width=0.8\textwidth]{imgs/ernie_tableAblation.png}
+\vspace{-5pt}
+\captionof{table}{\footnotesize Ablation study for ERNIE's \nameref{sec:phrasemasking} and \nameref{sec:entitymasking}. From \emph{Table 2 in ERNIE: Enhanced Representation Through Knowledge Integration}, by Sun et al., 2019a. \url{https://arxiv.org/pdf/1904.09223.pdf}. Copyright 2019a by Sun et al.}
+\vspace{-5pt}
+\label{tbl:ernie_ablationStudy}
+\end{figure}
+
+
+
+Additionally, the authors tested ERNIE's knowledge learning ability using fill-in-the-blanks on named entities in paragraphs. In case 1 from \cref{tbl:ernie_vs_bert_knowledgeLearningTask}, ERNIE predicts the correct father name entity based on prior knowledge in the article while \nameref{sec:BERT} simply memorizes one of the sons' name, completely ignoring any relationship between mother and son. In case 2, \nameref{sec:BERT} can learn contextual patterns to predict the correct named entity type but fails to fill the slot with the actual correct entity, while ERNIE fills the slots with the correct entity. In cases 3,4,6 \nameref{sec:BERT} fills the slots with characters related to the sentences but not with the semantic concept, while ERNIE again predicts the correct entities. 
+
+
+\begin{table}[htbp]
+\begin{tableFont}
+    \small 
+    \centering
+    \setlength{\tabcolsep}{6pt} % Default value: 6pt
+    %\cellspacetoplimit = 6pt\cellspacebottomlimit =6pt
+    \renewcommand{\arraystretch}{2} % Default value: 1
+    
+    \begin{tabu} to \textwidth {| X[0.5] | X[7] | X | X | X |}
+        
+        \hline
+  
+        
+        %\rowcolor{MyLavender} 
+        \centering \textbf{Case}
+        & \centering \textbf{Text} 
+        & \centering \textbf{Predicted by ERNIE}\newline 
+        & \centering\textbf{Predicted by BERT} 
+        & \centering \textbf{Answer} \\ 
+        
+        \hline
+        
+        
+        $1$
+        &
+        ``In September 2006, $\_\_\_$ married Cecilia Cheung. They had two sons, the older one is Zhenxuan Xie and the younger one is Zhennan Xie." \newline
+        & 
+        Tingfeng Xie
+        & 
+        Zhenxuan Xie
+        & 
+        {\color{Green} Tingfeng Xie} \\ 
+        
+        \hline 
+        
+        $2$
+        &
+        ``The Reform Movement of 1898, also known as the Hundred-Day Reform, was a bourgeois reform carried out by the reformists such as $\_\_\_$ and Qichao Liang through Emperor Guangxu."  \newline  
+        & 
+        Youwei Kang
+        & 
+        Schichang Sun
+        & 
+        {\color{Green} Youwei Kang} \\ 
+        
+        \hline 
+        
+        $3$
+        &
+        ``Hyperglycemia is caused by defective $\_\_\_$  secretion or impaired biological function, or both. Long-term hyperglycemia in diabetes leads to chronic damage and dysfunction of various tissues, generally eyes, kidneys, heart, blood vessels and nerves."   \newline 
+        & 
+        Insulin
+        & 
+        (Not a word in Chinese)
+        & 
+        {\color{Green} Insulin} \\ 
+        
+        \hline  
+        
+        $4$
+        &
+        ``Australia is a highly developed capitalist country with $\_\_\_$ as its capital. As the most developed country in the Southern Hemisphere, the $12$th largest economy in the world and the fourth largest exporter of agricultural products in the world, it is also the world's largest exporter of various minerals."   \newline 
+        & 
+        Melbourne
+        & 
+        (Not a city name)
+        & 
+        {\color{Green} Canberra} \\ 
+        
+        \hline 
+        
+        $6$
+        &
+        ``Relativity is a theory about space-time and gravity, which was founded by $\_\_\_$."   \newline 
+        & 
+        Einstein
+        & 
+        (Not a word in Chinese)
+        & 
+        {\color{Green} Einstein} \\ 
+        
+        
+        \hline 
+        
+    \end{tabu}
+    
+    \captionof{table}{\footnotesize Comparing ERNIE to BERT on Cloze Chinese Task. From \emph{Figure 4 in ERNIE: Enhanced Representation Through Knowledge Integration}, by Sun et al., 2019a. . Copyright 2019a by Sun et al.}
+    
+    \label{tbl:ernie_vs_bert_knowledgeLearningTask}
+\end{tableFont}
+\end{table}
+
+
+
+
+However in case 4, ERNIE predicts the wrong city name, though it still understands the semantic type. It is evident that ERNIE's contextual knowledge understanding is far superior to \nameref{sec:BERT}'s predictions (Sun et al., 2019a). 
+
+
 
 
 
 % ------------------------------------------------------------
 
 \section{ERNIE 2.0} \label{sec:ERNIE_2}
+
+
+\subsection{Motivation for ERNIE 2.0}
+
+Models such as \nameref{sec:Word2Vec}, \nameref{sec:Glove}, and \nameref{sec:BERT} extract meaning using co-occurrences. Even \nameref{sec:XLNet}'s permutation language model relies on co-occurrences. 
+
+
+\begin{figure}[h]
+\vspace{-5pt}
+\centering
+\includegraphics[width=0.9\textwidth]{imgs/ernie2_framework.png}
+\vspace{-5pt}
+\captionof{figure}{\footnotesize ERNIE 2.0's framework where embeddings are created by continual multi-task learning and then fine-tuned for specific \hyperref[app:Appendix_NLPTasks]{nlp tasks}. From \emph{Figure 1 in ERNIE 2.0: A Continual Pre-Training Framework for Language Understanding}, by Sun et al., 2019. \url{https://arxiv.org/pdf/1907.12412.pdf}. Copyright 2019 by Sun et al.}
+\vspace{-5pt}
+\label{fig:ernie2_framework}
+\end{figure}
+
+
+However, ERNIE 2.0 instead broadens the vision to more than just simple co-occurrence counts. Using a \hyperref[sec:ContinualMultiTaskLearning]{continual multi-task learning} framework (\cref{fig:ernie2_framework}) to remember previously learned knowledge, ERNIE 2.0 can capture ``lexical, syntactic and semantic information from training corpora in form of named entities (like person names,
+location names, and organization names), semantic closeness (proximity of sentences),
+sentence order or discourse relations” (Sun et al., 2019b).
+
+\subsection{Continual Multi-Task Learning}\label{sec:ContinualMultiTaskLearning}
+
+Inspired by human's ability to continuously accumulate information from past experience to develop new skills, \textbf{continual learning} (Parisi et al. 2019; Chen and Liu, 2018) trains a model sequentially in multiple tasks so that it remembers previously-learned tasks while learning new ones (Sun et al., 2019b). Humans do not forget skating when learning how to ski; continual learning helps a model do likewise. 
+
+
+\begin{program}
+\begin{wrapfigure}{L}{0.7\textwidth}
+\begin{center}
+    \includegraphics[width=0.6\textwidth]{imgs/multitaskExample.png}
+\end{center}
+%\vspace{-10pt}
+\captionof{figure}{\footnotesize Example of multi-task learning. From \emph{ERNIE 2.0: A CONTINUAL PRE-TRAINING FRAMEWORK FOR LANGUAGE UNDERSTANDING}, by Sequeira, 2019. \url{https://medium.com/psyai/ernie-2-0-an-article-to-hopefully-answer-all-your-questions-b5df21a64090}. Copyright n.d. by n.d.}
+%\vspace{-5pt}
+\label{fig:multitaskexample}
+\end{wrapfigure}
+
+\textbf{Multi-task learning} means learning multiple tasks simultaneously. An example is in \cref{fig:multitaskexample} where an Encoder is shared across task-specific architectures. In multitask model training, data is batched and allocated for specific task training. All tasks take turns learning on their mini-batched data then separately update the shared encoder based on the loss. However, this separate, individual task learning affects the weights in the shared encoder, causing ``catastrophic forgetting" (Sequeira, 2019). 
+
+\end{program}
+
+
+
+
+\begin{program}
+\begin{wrapfigure}{L}{0.7\textwidth}
+    \centering
+    \includegraphics[width=0.65\textwidth]{imgs/ernie_continualMultitask.png}
+%\end{center}
+\vspace{-5pt}
+\captionof{figure}{\footnotesize Continual multi-task learning in ERNIE. From \emph{ERNIE 2.0: A CONTINUAL PRE-TRAINING FRAMEWORK FOR LANGUAGE UNDERSTANDING}, by Sequeira, 2019. \url{https://medium.com/psyai/ernie-2-0-an-article-to-hopefully-answer-all-your-questions-b5df21a64090}. Copyright n.d. by n.d.}
+\vspace{-10pt}
+\label{fig:ernie_continualMultitaskLearning}
+\end{wrapfigure}
+
+ERNIE 2.0 however combines these two features into \textbf{continual multi-task learning}; several tasks are trained in parallel and the shared encoder is updated using the average of losses from all tasks. This is shown in \cref{fig:ernie_continualMultitaskLearning}. Specifically, for the first step, only Task 1 is learned and the encoder weights are updated from Task 1's loss. In step 2, the shared encoder is initialized with weights from the previous step and Task 1 and 2 are learned at the same time. Since the shared encoder has already learned from Task 1, only the loss from Task 2 will mostly updated the shared encoder, while retaining Task 1 information. Next, average loss is calculated to update the shared encoder. These steps continue until the model has trained on all tasks (Sequeira, 2019). 
+
+\end{program}
+

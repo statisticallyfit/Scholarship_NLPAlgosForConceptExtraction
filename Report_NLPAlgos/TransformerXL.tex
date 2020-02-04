@@ -50,6 +50,8 @@ To resolve \textbf{context fragmentation}, the Transformer-XL employs a \textbf{
 
 Although gradient updates or training still occurs within a segment, the extended context feature allows historical information to be fully used, avoiding context fragmentation. 
 
+Intuitively, for the sentence ``I went to the store. I bought some cookies," the model receives the sentence ``I went to the store," caches the hidden states, and only \emph{then} feeds the other part ``I bought some cookies" with the cached states into the model (Kurita, 2019b). 
+
 Formally, the recurrence mechanism is described as follows. Let $\textbf{s}_\tau = \Big\{ x_{\tau_1}, x_{\tau_2}, ..., x_{\tau_L} \Big\}$ and $\textbf{s}_{\tau + 1} = \Big\{ x_{{\tau+1}_1}, x_{{\tau+1}_2}, ..., x_{{\tau+1}_L} \Big\}$ denote two consecutive segment embeddings of length $L$. Let $\textbf{h}_\tau^n \in \mathbb{R}^{L \times d}$ be the $n$-th layer's hidden state vector produced for the $\tau$-th segment $\textbf{s}_\tau$, where $d$ is the hidden dimension. Then the $n$-th layer's hidden state for next segment $\textbf{s}_{\tau + 1}$ is calculated as:
 $$
 \begin{array}{ll}
@@ -75,9 +77,9 @@ To remedy this and make their recurrence scheme work, the authors created a \tex
     
     \item \textbf{Content-dependent positional bias: }with respect to the current query. It uses a sinusoidal function that get distance between tokens instead of the \emph{absolute position} of a single current token. 
     
-    \item \textbf{Learned global content bias: } is a learned vector that accounts for the other tokens in the key matrix. This is term (c).  
+    \item \textbf{Learned global content bias: } is a learned vector that accounts for the other tokens in the key matrix.
     
-    \item \textbf{Learned global positional bias: }is a learned vector that adjusts the importance based only on distance between tokens, using the intuition that recent previous words are more relevant that a word from the previous paragraph. This is term (d). 
+    \item \textbf{Learned global positional bias: }is a learned vector that adjusts the importance based only on distance between tokens, using the intuition that recent previous words are more relevant that a word from the previous paragraph. 
 \end{enumerate}
 
 
