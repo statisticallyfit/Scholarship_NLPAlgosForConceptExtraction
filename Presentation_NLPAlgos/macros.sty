@@ -17,6 +17,8 @@
 \usepackage{verbatim}
 
 
+\usepackage{tabu}
+
 
 
 
@@ -113,13 +115,14 @@
 %    \setlength{\parskip}{0pt}}% really increases %vspace
 %  {\end{itemize}}
 
+
 \newenvironment{itemizeSpaced}[1]
   {\begin{itemize}%
     %\setlength{\topsep}{15pt}%
     \setlength{\itemsep}{#1}%
     \setlength{\parsep}{0pt}%
     \setlength{\parskip}{0pt}}% really increases vspace
-  {\end{itemize}}
+  {\end{itemize}} 
 
 
 \newenvironment{enumerateSpaced}[1]
@@ -196,6 +199,7 @@
 % Declaring some base colors to change:
 \colorlet{BaseRed}{LightSalmon!50} % to lighten by 50
 \colorlet{BaseGreen}{LightGreen!50}
+\colorlet{BaseBlue}{Aqua!15}
 \colorlet{DefColor}{LightGoldenrod!50}
 
 \newcommand{\lighten}[3]{% Reference Color, Percentage, New Color Name
@@ -215,6 +219,9 @@
 \lighten{BaseGreen}{50}{LightGreen}
 \darken{BaseGreen}{50}{DarkGreen}
 
+\lighten{BaseBlue}{50}{LightBlue}
+\darken{BaseBlue}{50}{DarkBlue}
+
 \lighten{DefColor}{50}{LightGold}
 \darken{DefColor}{50}{DarkGold}
 
@@ -225,10 +232,15 @@
 
 % SOURCE: https://tex.stackexchange.com/questions/33231/how-to-change-the-color-of-a-block-within-a-custom-beamer-sty-theme-file
 
+%\newenvironment{exampleBlock}[1]{%
+%  \setbeamercolor{block title}{bg=BaseGreen, fg=DarkGreen}
+%  \setbeamercolor{block body}{bg=LightGreen}
+%  \begin{block}{#1}}{\end{block}}
+ 
 \newenvironment{exampleBlock}[1]{%
-  \setbeamercolor{block title}{bg=BaseGreen, fg=DarkGreen}
-  \setbeamercolor{block body}{bg=LightGreen}
-  \begin{block}{#1}}{\end{block}}
+  \setbeamercolor{block title}{bg=BaseBlue, fg=DarkBlue}
+  \setbeamercolor{block body}{bg=LightBlue}
+  \begin{block}{#1}}{\end{block}} 
   
 \newenvironment{alertBlock}[1]{%
   \setbeamercolor{block title}{bg=BaseRed, fg=DarkRed}

@@ -52,14 +52,13 @@
 
 BERT does \textbf{pre-training} (trains on \emph{unlabeled data} over different tasks), and \textbf{fine-tuning} (to use pre-training parameters to train over \emph{labeled data} for nlp tasks)
 
-Pre-training involves:  \textbf{masked language modeling (MLM)} task and \textbf{next sentence prediction (NSP)} task to learn bidirectional context and \emph{sentence-level} information
+This improves over language models that just predict next tokens given context. 
 
-Improvement over language models that just predict next tokens given context. 
-
+Pre-training involves:  
 
 
 {\large \textbf{Masked language model (MLM): }}
-    \begin{itemizeSpaced}{2pt}
+    \begin{itemizeSpaced}{5pt}
         \pinkbox \textbf{Motivation: } bidirectional conditioning causes information leakage (a word can implicitly ``see itself" letting the model trivially guess the target word in a multi-layered context (Devlin et al., 2019)). 
         
         \item \textbf{Goal: }randomly masks some input tokens to predict original masked word using only its context. 
@@ -67,9 +66,9 @@ Improvement over language models that just predict next tokens given context.
         \item \textbf{Effect of MLM: } fuses left and right context to get \emph{deep} bidirectional context (unlike ELMo's shallow left-to-right language model (Devlin et al., 2019)).  
     \end{itemizeSpaced}
     
-{\large \textbf{Next Sentence Prediction (NSP: }}
-    \begin{itemizeSpaced}{2pt}
-        \pinkbox \textbf{Motivation: }Ordinary  language models lack \emph{sentence-level} information $\Rightarrow$ cannot do well in question-answering (QA) and natural language inference (NLI) tasks
+{\large \textbf{Next Sentence Prediction (NSP):}}
+    \begin{itemizeSpaced}{5pt}
+        \pinkbox \textbf{Motivation: } to capture \emph{sentence-level} information $\Rightarrow$ to do well in question-answering (QA) and natural language inference (NLI) tasks
         
         
         \item \textbf{Goal: } task that finds if sentence is the next sentence of the other. 
@@ -117,27 +116,28 @@ Improvement over language models that just predict next tokens given context.
     \begin{columns}
     
         \begin{column}{0.6\textwidth}
-            \vspace{\topsep}
-            
+            %\vspace{\topsep}
+            \vspace{5pt}
+            \begin{center}
             \includegraphics[width=0.8\columnwidth]{imgs/bert_headsDirectObject.png}
+            \end{center}
+            \vspace{-10pt}
             
-            \vspace{-5pt}
-            
-            \captionof{figure}{\linespread{0.3}\footnotesize BERT attention heads capture syntax. In heads 8-10, direct objects are found to attend to their verbs. Line darkness indicates attention strength. Red indicates attention to/from red words, to highlight certain attentional behaviors. From \emph{What Does BERT Look At? An Analysis of BERT's Attention}, by Clark et al., 2019. \url{https://arxiv.org/abs/1906.04341}. Copyright 2019 by Clark et al.} 
+            \captionof{figure}{\linespread{0.3}\footnotesize BERT attention heads capture syntax. In heads 8-10, direct objects are found to attend to their verbs. Line darkness indicates attention strength. Red indicates attention to/from red words, to highlight certain attentional behaviors. From \emph{What Does BERT Look At? An Analysis of BERT's Attention}, by Clark et al., 2019. \url{https://arxiv.org/abs/1906.04341}. } 
             \label{fig:bertHeadDirectObject}
         \end{column}
         
         \begin{column}{0.4\textwidth}
         
-            Clark et al. (2019) found ...
+            Clark et al. (2019) found ...\newline
             
-            \begin{itemizeSpaced}{2pt}
+            \begin{itemizeSpaced}{10pt}
             
-                \item  While BERT's attention heads do not capture syntax dependency structure as a whole....
+                %\item  While BERT's attention heads do not capture syntax dependency structure as a whole....
             
-                \item ... different heads are better at detecting different syntax dependency relationships.
+                %\item ... different heads are better at detecting different syntax dependency relationships.
                 
-                \item \textbf{Example: }the heads detect ``direct objects of verbs, determiners of nouns, objects of prepositions, and objects of possessive pronouns with > $75 \%$ accuracy."
+                \pinkbox BERT's attention heads detect ``direct objects of verbs, determiners of nouns, objects of prepositions, and objects of possessive pronouns with > $75 \%$ accuracy."
                 
                 \item Attention heads 8-10 in \cref{fig:bertHeadDirectObject} learn how direct objects attend to their verbs. 
                 
@@ -169,7 +169,7 @@ Improvement over language models that just predict next tokens given context.
         
         \normalsize \linespread{0.4}
         
-            \item If this were true, attention heads processing \texttt{[SEP]} should attend broadly over entire segment to make the segment vectors. BUT in \cref{fig:bertHeadDirectObject}, heads 8-10 direct objects attend to their verbs, and all other words attend to the \texttt{[SEP]} token. 
+            \item If this were true, attention heads processing \texttt{[SEP]} should attend broadly over entire segment to make the segment vectors. But in \cref{fig:bertHeadDirectObject}, heads 8-10 show direct objects attend to their verbs, and all other words attend to the \texttt{[SEP]} token. 
             
             \item Gradient measures: show much the attention to a token would change BERT's outputs. Attention to \texttt{[SEP]} increases in layers 5-10 (\cref{fig:bertSEPAttention}), WHILE the gradients for attention to \texttt{[SEP]} decrease here (\cref{fig:bertGradient})  $\Rightarrow$ attending to \texttt{[SEP]} does not significantly change BERT's outputs. 
         \end{itemizeSpaced}
@@ -231,7 +231,7 @@ So, BERT's attention heads attend to \texttt{[SEP]} when they have no other job,
             
             \item \underline{False prediction 2}: correct word sense of ``balloon" is a verb while BERT predicted a noun sense, so it did not even get the word class correct.
             
-            \item \underline{False prediction 3}: correct sense label of the polysemic word ``watch" was \emph{to look attentively} while BERT predicted its sense as \emph{to follow with the eyes or the mind; observe}. 
+            \item \underline{False prediction 3}: correct sense of ``watch" was \emph{to look attentively} while BERT predicted its sense as \emph{to follow with the eyes or the mind; observe}. 
         \end{itemizeSpaced}
         
     \end{itemizeSpaced}

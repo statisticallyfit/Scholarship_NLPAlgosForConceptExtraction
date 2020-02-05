@@ -27,9 +27,11 @@
 %\subsection{\small Mikolov et al. (2013a) in \textit{Distributed Representations of Words and Phrases and their Compositionality --- todoevernote} and Mikolov et al. (2013b) in \textit{Efficient Estimation of Word Representations in Vector Space}}
 
 
+
+% ERASE
 \begin{frame}{Word2Vec}
     \begin{itemizeSpaced}{10pt}
-        \item \textbf{Word2Vec} is an unsupervised learning algorithm for obtaining word vector representations using a two-layer neural network. 
+        \pinkbox \textbf{Word2Vec} is an unsupervised learning algorithm for obtaining word vector representations using a two-layer neural network. 
         \begin{itemizeSpaced}{2pt}
             \item Input: text corpus
             \item Output: the set of feature vectors, as one vector per word.
@@ -37,7 +39,7 @@
         
         \item Already achieved by word representations: the capturing of linguistic patterns, allowing algebraic operations to be done on the word vectors in their semantic vector space; for example, $vector(\textit{"King"}) - vector(\textit{"Man"}) + vector(\textit{"Woman"})$ outputs a vector close to the word vector for ``Queen". 
         
-        \item \textbf{Word2Vec's Contribution}: uses Skip-Gram and CBOW as part of Word2Vec to ...
+        \pinkbox \textbf{Word2Vec's Contribution}: uses Skip-Gram and CBOW as part of Word2Vec to ...
         
         \begin{itemizeSpaced}{2pt}
             \item learn word vector representations \emph{more efficiently} from large data. 
@@ -76,6 +78,8 @@
 \end{frame}
 
 
+
+% ERASE
 \begin{frame}{Formula: Basic Structure of Skip-Gram and CBOW}
     
     \begin{itemizeSpaced}{5pt}
@@ -110,9 +114,9 @@
 \begin{frame}{Skip-Gram}\label{SkipGram}
     
     \begin{itemizeSpaced}{5pt}
-        \item  Predicts context words given a single target word. 
+        \pinkbox  Predicts context words given a single target word. 
         
-        \item Uses a fixed sliding window $c$, or size of the training context, around a target word, to capture context along a sentence. 
+        \pinkbox Uses a fixed sliding window $c$, or size of the training context, around a target word, to capture context along a sentence. 
         
         \item Context is captured using that sliding window (bidirectionally). 
         
@@ -122,7 +126,7 @@
     
     
     \begin{figure}[h]
-    \vspace{-5pt}
+    \vspace{-15pt}
     \centering
     \includegraphics[width=0.7\textwidth]{imgs/skipgram_image.png}
     \vspace{-5pt}
@@ -137,7 +141,7 @@
 \begin{frame}{Continuous-Bag-of-Words (CBOW)}\label{frame:CBOW}
     
     \begin{itemizeSpaced}{0pt}
-        \item \textbf{Continuous bag of words model (CBOW)} is opposite of the Skip-Gram: predicts \emph{target} word based on a \emph{context} word. 
+        \pinkbox \textbf{Continuous bag of words model (CBOW)} is opposite of the Skip-Gram: predicts \emph{target} word based on a \emph{context} word. 
         
         \item Averages $n$ context words around target word $w_t$ to predict target (in hidden layer calculation): %\footnotemark 
         $
@@ -168,14 +172,14 @@
 
     \begin{itemizeSpaced}{7pt}
     
-        \item \textbf{Problem with previous word vectors:} no \emph{phrase representation}
+        \pinkbox \textbf{Problem with previous word vectors:} no \emph{phrase representation}
         \begin{itemize}
-            \item “Canada” and “Air” in a phrase could not be recognized as part of a larger concept and thus combined into “Air Canada” (Mikolov et al., 2013a).
+            \arrowitem “Canada” and “Air” in a phrase could not be recognized as part of a larger concept and thus combined into “Air Canada” (Mikolov et al., 2013a).
         \end{itemize}
         
-        \item \textbf{Phrase-Skip-Gram Model}:
+        \pinkbox \textbf{Phrase-Skip-Gram Model}:
         \begin{itemizeSpaced}{2pt}
-            \item uses \emph{unigram and bigram counts} to make phrases.
+            \pinkbox uses \emph{unigram and bigram counts} to make phrases.
             
             \item ${\large S_{phrase} = \frac{C(w_i w_j) - \delta} {C(w_i)C(w_j)} }$ where $C(\cdot)$ = count of a unigram $w_i$ or bigram $w_i w_j$ and $\delta$ is a discounting threshold to avoid making infrequent words and phrases.
             
@@ -186,7 +190,7 @@
         \item \textbf{Result: } linear structure \textbf{additive compositionality} of word vectors 
         
         \begin{itemize}
-            \item \textbf{Explaining Additive Compositionality: }lets some individual words be combined into phrase and viewed as unique identity, while a bigram like “this is” should remain unchanged (Mikolov et al., 2013a, p. 5).
+            \pinkbox \textbf{Explaining Additive Compositionality: }lets some individual words be combined into phrase and viewed as unique identity, while a bigram like “this is” should remain unchanged (Mikolov et al., 2013a, p. 5).
             
             \item \textbf{How It Occurs: } product of distributions in loss function acts like an ``and" function
         \end{itemize} 

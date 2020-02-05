@@ -6,6 +6,14 @@
 
 
 
+
+% Set up table font ---------------------------
+% Use this for \begin{tableFont} ... \end{tableFont}
+\newenvironment{tableFont}{\setmainfont{Overlock}\selectfont}{\par}
+
+
+
+
 % TItle page -----------------------------------------------------------
 
 
@@ -35,6 +43,7 @@
 % Change font size:
 \ContentFontSize
 
+\input{Intro_Me_Frame.tex}
 
 \input{Intro_Frame.tex}
 \input{WordEmb_Frame.tex}
@@ -46,6 +55,7 @@
 \input{ELMo_Frame.tex}
 \input{BERT_Frame.tex}
 \input{TransformerXL_Frame.tex}
-
+\input{XLNet_Frame.tex}
+\input{ERNIE_Frame.tex}
 
 \end{document}

@@ -16,7 +16,7 @@
     \end{exampleBlock}
     
     \begin{itemizeSpaced}{0pt}
-        \item \textbf{Self-Attention} lets Transformer look at other words to \emph{bake in} their representations into the word ``it" while processing the input sequence.
+        \pinkbox \textbf{Self-Attention} lets Transformer look at other words to \emph{bake in} their representations into the word ``it" while processing the input sequence.
         
         \item An \textbf{attention function} maps query and key-value pairs to output vector:
         
@@ -31,7 +31,7 @@
             
     \end{itemizeSpaced}
     
-        \item Cements the values of words on which to focus while drowning out irrelevant words.
+        \pinkbox Cements the values of words on which to focus while drowning out irrelevant words.
     \end{itemizeSpaced}
 \end{frame}
 
@@ -48,9 +48,9 @@
     \end{definitionBlock}
     
     \begin{itemizeSpaced}{4pt}
-        \item Instead of calculating attention once, multi-head attention does (1) self attention many times in parallel on the projected dimensions, (2) concatenates the independent attention outputs, and (3) once again projects the result into the expected dimension to give a final value (Vaswani et al., 2017; Weng, 2018).
+        \pinkbox Instead of calculating attention once, multi-head attention does (1) self attention many times in parallel on the projected dimensions, (2) concatenates the independent attention outputs, and (3) once again projects the result into the expected dimension to give a final value (Vaswani et al., 2017; Weng, 2018).
         
-        \item More attention heads means Transformer can focus on different words; while encoding ``it", one attention head looks at ``the animal" while another focuses on ``tired" $\Rightarrow$ representation of ``it" includes some of all words. 
+        \pinkbox More attention heads means Transformer can focus on different words; while encoding ``it", one attention head looks at ``the animal" while another focuses on ``tired" $\Rightarrow$ representation of ``it" includes some of all words. 
     \end{itemizeSpaced}
     
 \end{frame}
@@ -78,7 +78,7 @@
     
     
     \begin{itemizeSpaced}{2pt}
-        \item Transformer has no recurrence, so can't yet see \emph{order in the input sequence}. 
+        \pinkbox Transformer has no recurrence, so can't yet see \emph{order in the input sequence}. 
         
         \item Positional encodings act in place of recurrence mechanism to inject relative / absolute token position info so Transformer can see \emph{sentence order} when taking inputs.
         
@@ -91,7 +91,7 @@
 
 
 
-
+% ERASE
 \begin{frame}{Transformer: More Layers}
 
     \begin{itemizeSpaced}{3pt}
@@ -141,6 +141,9 @@
 
 
 
+
+
+% ERASE
 \begin{frame}{Transformer: How Do We Predict a Word?}
     \large 
     
@@ -151,7 +154,7 @@
     \begin{itemizeSpaced}{7pt}
         \item \textbf{Linear Layer} neural network projects Decoder's float vector to larger dimension ``logit vector" (each cell holds a score corresponding to each unique vocabulary word.)
     
-        \item \textbf{Softmax Layer} then converts the Linear Layer's scores into probabilities via thesoftmax function. 
+        \item \textbf{Softmax Layer} then converts the Linear Layer's scores into probabilities via the softmax function. 
     \end{itemizeSpaced}
 
     \textbf{To find the predicted word: } the cell with highest probability is chosen $\Rightarrow$ its word is the ``predicted" word. 

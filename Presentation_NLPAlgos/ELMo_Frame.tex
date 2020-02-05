@@ -4,7 +4,8 @@
 
 
 \begin{frame}{ELMo: Motivation}
-
+    \large \linespread{0.4}
+    
     \textbf{Motivation for ELMo: }Remember \textbf{polysemy}? Contextual embeddings create one vector per word type in a context. 
     
     \begin{exampleBlock}{Example}
@@ -21,13 +22,13 @@
 \begin{frame}{ELMo: Structure}
 
     \begin{itemizeSpaced}{2pt}
-        \item \textbf{ELMo} uses bidirectional language model (biLM) to make \emph{deep} word embeddings (derived from all its internal layers)
+        \pinkbox \textbf{ELMo} uses bidirectional language model (biLM) to make \emph{deep} word embeddings (derived from all its internal layers)
 
-        \item Higher-level LSTM layers capture contextual meaning (useful for supervised word sense disambiguation (WSD)).
+        \pinkbox Higher-level LSTM layers capture contextual meaning (useful for supervised word sense disambiguation (WSD)).
         
-        \item Lower layers capture syntax information (useful for part of speech tagging (POS)). 
+        \pinkbox Lower layers capture syntax information (useful for part of speech tagging (POS)). 
         
-        \item Mixing these signals let ELMo's embeddings select the types of semi-supervision most needed for each end task $\Rightarrow$ ELMo embeddings are thus richer than traditional word vectors. 
+        \pinkbox Mixing these signals let ELMo's embeddings select the types of semi-supervision most needed for each end task $\Rightarrow$ ELMo embeddings are thus richer than traditional word vectors. 
         
         \item \textbf{Task-Specific: } ELMo is a task-specific combination of the intermediate layer representations in the biLM (collapses forward and backward hidden states into single embedding for a specific task by weighting the biLM layers): \footnotemark 
         $$
@@ -57,27 +58,28 @@
         \end{minipage}
         \vspace{-7pt}
       \end{tabular}
-      \caption{\linespread{0.3} \footnotesize Nearest neighbors to ``play” using GloVe and the context embeddings from a biLM. From \emph{Table 4 in Deep Contextualized Word Representations}, by Peters et al., 2018. \url{https://arxiv.org/pdf/1802.05365.pdf}. Copyright 2018 by Peters et al.}
+      \caption{\linespread{0.3} \scriptsize Nearest neighbors to ``play” using GloVe and the context embeddings from a biLM. From \emph{Table 4 in Deep Contextualized Word Representations}, by Peters et al., 2018. \url{https://arxiv.org/pdf/1802.05365.pdf}. Copyright 2018 by Peters et al.}
       \label{tbl:elmoPlayExample}
       \vspace{-10pt}
     \end{table}
     
     
-    \begin{itemizeSpaced}{0pt}
+    {\linespread{0.3}
+    \begin{itemizeSpaced}{4pt}
         
         \item \cref{tbl:elmoPlayExample} displays words nearest to polysemous word ``play" found using GloVe vs biLM. 
         
-        \item GloVe's neighbors have different parts of speech, like verbs (``played", ``playing"), and nouns (``player", ``game") and only in the sport sense.
+        \pinkbox GloVe's neighbors have different parts of speech, like verbs (``played", ``playing"), and nouns (``player", ``game") and only in the sport sense.
         
         
-        \item biLM's nearest neighbor sentences from ``play'' CWE show clear difference between \emph{both} the parts of speech \emph{and} word sense of ``play". 
+        \pinkbox biLM's nearest neighbor sentences from ``play'' CWE show clear difference between \emph{both} the parts of speech \emph{and} word sense of ``play". 
         
         \begin{itemizeSpaced}{0pt}
-            \item last row: input sentence has noun / acting sense of ``play" and this is matched in the nearest neighbor sentence
+            \pinkbox last row: input sentence has noun / acting sense of ``play" and this is matched in the nearest neighbor sentence
         \end{itemizeSpaced}        
             
     
-    \end{itemizeSpaced}
+    \end{itemizeSpaced} }
     
     \textbf{ELMo key feature: } learn context using part of speech tagging (POS) and word sense disambiguation (WSD).  
     

@@ -4,24 +4,24 @@
 \section{GloVe (Global Vectors for Word Representation)}
 
 
-\begin{frame}{Problem With Word2Vec}
+\begin{frame}{GloVe: Problem With Word2Vec}
     
     \begin{itemizeSpaced}{0pt}
-        \item \textbf{Problem: } Word2Vec uses local not global counts.  
+        \pinkbox {\color{Crimson} \textbf{Problem: }} Word2Vec uses local not global counts.  
         \begin{itemizeSpaced}{0pt}
-            \item \textbf{Example: }``the" and ``cat" may occur frequently but Word2Vec does not know if this is because ``the" is a common word or because ``the" and ``cat" are actually correlated  (Kurita, 2018). 
+            \pinkbox \textbf{Example: }``the" and ``cat" may occur frequently but Word2Vec does not know if this is because ``the" is a common word or because ``the" and ``cat" are actually correlated  (Kurita, 2018). 
             
         \end{itemizeSpaced}
         
         \item \textbf{Reason: } 
         \begin{itemizeSpaced}{0pt}
-            \item Word2Vec implicitly optimizes over a co-occurrence matrix while streaming over input sentences $\Rightarrow$ context words are processed equally.
+            \pinkbox Word2Vec implicitly optimizes over a co-occurrence matrix while streaming over input sentences $\Rightarrow$ context words are processed equally.
             
             \item Word2Vec's loss function $J = - \sum_i X_i \sum_j P_{ij} \text{log}(Q_{ij}) $ is the cross entropy between the \emph{predicted} and \emph{actual word distributions} in the context of word $i$.  \footnotemark 
             
             \item GloVe's authors say cross entropy models long-tailed distributions poorly, and here $X_i$ means equal-weighting over words. 
             
-            \item Kurita (2018a) says there is no inherent justification for equal-streaming over words: GloVe uses \emph{unnormalized} probabilities. 
+            \pinkbox Kurita (2018a) says there is no inherent justification for equal-streaming over words: GloVe uses \emph{unnormalized} probabilities. 
             
         \end{itemizeSpaced}
         

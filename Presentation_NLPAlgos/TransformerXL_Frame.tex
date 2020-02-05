@@ -16,9 +16,7 @@
         \begin{itemizeSpaced}{2pt}
             \arrowitem Transformers lose contextual information 
             
-            \arrowitem Transformers forget words from a few sentences ago (Dai et al., 2019) 
-            
-            \arrowitem long-term memory problem.
+            \arrowitem Transformers forget words from a few sentences ago (Dai et al., 2019)
             
             \arrowitem \textbf{Context-Fragmentation Problem}
         \end{itemizeSpaced}
@@ -38,7 +36,7 @@
     \centering
     \includegraphics[width=0.99\textwidth]{imgs/transXL_vanillaSegmentation.png}
     %\vspace{-5pt}
-    \caption{\small Vanilla Transformer with segment embedding length $ = 4$. Training the model in fixed-length segments while disregarding natural sentence boundaries results in the \emph{context fragmentation problem}: during each evaluation step, the Transformer consumes a segment embedding and makes a prediction at the last position. Then at the next step, the segment is shifted right by one position only, and the new segment must be processed from scratch, so there is no context dependency for first tokens of each segment and between segments. From \emph{Transformer-XL: Attentive Language Models Beyond a Fixed-Length Context}, by Dai et al., 2019. \url{https://arxiv.org/pdf/1901.02860.pdf}. Copyright 2019 by Dai et al.}
+    \caption{\small Vanilla Transformer with segment embedding length $ = 4$. Training the model in fixed-length segments while disregarding natural sentence boundaries results in the \emph{context fragmentation problem}: during each evaluation step, the Transformer consumes a segment embedding and makes a prediction at the last position. Then {\color{Teal} at the next step, the segment is shifted right by one position only, and the new segment must be processed from scratch, so there is no context dependency for first tokens of each segment and between segments.} From \emph{Transformer-XL: Attentive Language Models Beyond a Fixed-Length Context}, by Dai et al., 2019. \url{https://arxiv.org/pdf/1901.02860.pdf}. Copyright 2019 by Dai et al.}
     \vspace{-5pt}
     \label{fig:transXL_VanillaSegment}
     \end{figure}
@@ -106,9 +104,12 @@
         \begin{itemizeSpaced}{5pt}
             \largearrowitem Applying to Transformer-XL caused consecutive word embedding sequences to be associated with the same positional encoding.
             
-            \largearrowitem Transformer-XL can't distinguish the difference in positions of consecutive input tokens.
+            \largearrowitem Tokens from different segments had the same positional encodings
             
-            \largearrowitem Tokens from different segments had the same positional encodings, defeating the purpose.
+            \largearrowitem Transformer-XL couldn't distinguish the difference in positions of consecutive input tokens.
+            
+            \largearrowitem Defeated the purpose of positional encodings!
+            
         \end{itemizeSpaced}
         \end{addmargin} 
         
