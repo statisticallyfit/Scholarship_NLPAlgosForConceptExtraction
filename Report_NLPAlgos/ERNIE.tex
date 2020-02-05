@@ -41,7 +41,7 @@ A phrase is a ``small group of words of characters together acting as a conceptu
 \centering
 \includegraphics[width=0.99\textwidth]{imgs/ernie_maskingtypes.png}
 \vspace{-5pt}
-\captionof{figure}{\footnotesize ERNIE uses basic masking to get word representations, followed by phrase-level and entity-level masking. From \emph{ERNIE: Enhanced Representation Through Knowledge Integration}, by Sun et al., 2019a. \url{https://arxiv.org/pdf/1904.09223.pdf}. Copyright 2019a by Sun et al.}
+\captionof{figure}{\footnotesize ERNIE uses basic masking to get word representations, followed by phrase-level and entity-level masking. From \emph{ERNIE: Enhanced Representation Through Knowledge Integration}, by Sun et al., 2019. \url{https://arxiv.org/pdf/1904.09223.pdf}. Copyright 2019 by Sun et al.}
 \vspace{-5pt}
 \label{fig:ernie_maskingTypes}
 \end{figure}
@@ -65,7 +65,7 @@ Sun et al. (2019a) say that name entities contain ``persons, locations, organiza
     \includegraphics[width=0.55\textwidth]{imgs/ernie_tableResults.png}
 \end{center}
 \vspace{-20pt}
-\captionof{table}{\footnotesize Comparing ERNIE and BERT on five major nlp tasks in Chinese. From \emph{Table 1 in ERNIE: Enhanced Representation Through Knowledge Integration}, by Sun et al., 2019a. \url{https://arxiv.org/pdf/1904.09223.pdf}. Copyright 2019a by Sun et al.}
+\captionof{table}{\footnotesize Comparing ERNIE and BERT on five major nlp tasks in Chinese. From \emph{Table 1 in ERNIE: Enhanced Representation Through Knowledge Integration}, by Sun et al., 2019. \url{https://arxiv.org/pdf/1904.09223.pdf}. Copyright 2019 by Sun et al.}
 \vspace{-5pt}
 \label{tbl:ernie_vs_bert_Results}
 \end{wrapfigure}
@@ -84,7 +84,7 @@ Sun et al. assert this is because of ERNIE's knowledge integration masking strat
 \centering
 \includegraphics[width=0.8\textwidth]{imgs/ernie_tableAblation.png}
 \vspace{-5pt}
-\captionof{table}{\footnotesize Ablation study for ERNIE's \nameref{sec:phrasemasking} and \nameref{sec:entitymasking}. From \emph{Table 2 in ERNIE: Enhanced Representation Through Knowledge Integration}, by Sun et al., 2019a. \url{https://arxiv.org/pdf/1904.09223.pdf}. Copyright 2019a by Sun et al.}
+\captionof{table}{\footnotesize Ablation study for ERNIE's \nameref{sec:phrasemasking} and \nameref{sec:entitymasking}. From \emph{Table 2 in ERNIE: Enhanced Representation Through Knowledge Integration}, by Sun et al., 2019. \url{https://arxiv.org/pdf/1904.09223.pdf}. Copyright 2019 by Sun et al.}
 \vspace{-5pt}
 \label{tbl:ernie_ablationStudy}
 \end{figure}
@@ -95,18 +95,17 @@ Additionally, the authors tested ERNIE's knowledge learning ability using fill-i
 
 
 \begin{table}[htbp]
-\begin{tableFont}
     \small 
     \centering
     \setlength{\tabcolsep}{6pt} % Default value: 6pt
     %\cellspacetoplimit = 6pt\cellspacebottomlimit =6pt
     \renewcommand{\arraystretch}{2} % Default value: 1
     
+    \begin{tableFont}
     \begin{tabu} to \textwidth {| X[0.5] | X[7] | X | X | X |}
         
         \hline
-  
-        
+      
         %\rowcolor{MyLavender} 
         \centering \textbf{Case}
         & \centering \textbf{Text} 
@@ -177,13 +176,13 @@ Additionally, the authors tested ERNIE's knowledge learning ability using fill-i
         
         
         \hline 
-        
     \end{tabu}
     
-    \captionof{table}{\footnotesize Comparing ERNIE to BERT on Cloze Chinese Task. From \emph{Figure 4 in ERNIE: Enhanced Representation Through Knowledge Integration}, by Sun et al., 2019a. . Copyright 2019a by Sun et al.}
+    \end{tableFont}
+    
+    \captionof{table}{\footnotesize Comparing ERNIE to BERT on Cloze Chinese Task. From \emph{Figure 4 in ERNIE: Enhanced Representation Through Knowledge Integration}, by Sun et al., 2019. . Copyright 2019 by Sun et al.}
     
     \label{tbl:ernie_vs_bert_knowledgeLearningTask}
-\end{tableFont}
 \end{table}
 
 
@@ -222,39 +221,135 @@ sentence order or discourse relations” (Sun et al., 2019b).
 
 \subsection{Continual Multi-Task Learning}\label{sec:ContinualMultiTaskLearning}
 
-Inspired by human's ability to continuously accumulate information from past experience to develop new skills, \textbf{continual learning} (Parisi et al. 2019; Chen and Liu, 2018) trains a model sequentially in multiple tasks so that it remembers previously-learned tasks while learning new ones (Sun et al., 2019b). Humans do not forget skating when learning how to ski; continual learning helps a model do likewise. 
-
-
-\begin{program}
-\begin{wrapfigure}{L}{0.7\textwidth}
-\begin{center}
-    \includegraphics[width=0.6\textwidth]{imgs/multitaskExample.png}
-\end{center}
-%\vspace{-10pt}
-\captionof{figure}{\footnotesize Example of multi-task learning. From \emph{ERNIE 2.0: A CONTINUAL PRE-TRAINING FRAMEWORK FOR LANGUAGE UNDERSTANDING}, by Sequeira, 2019. \url{https://medium.com/psyai/ernie-2-0-an-article-to-hopefully-answer-all-your-questions-b5df21a64090}. Copyright n.d. by n.d.}
-%\vspace{-5pt}
-\label{fig:multitaskexample}
-\end{wrapfigure}
-
-\textbf{Multi-task learning} means learning multiple tasks simultaneously. An example is in \cref{fig:multitaskexample} where an Encoder is shared across task-specific architectures. In multitask model training, data is batched and allocated for specific task training. All tasks take turns learning on their mini-batched data then separately update the shared encoder based on the loss. However, this separate, individual task learning affects the weights in the shared encoder, causing ``catastrophic forgetting" (Sequeira, 2019). 
-
-\end{program}
+Traditional \textbf{continual learning} (Parisi et al. 2019; Chen and Liu, 2018) trains a model sequentially on multiple tasks to try to remember previously learned tasks while learning new ones. However, these procedures train the model with ``only one task at each stage with the demerit that it may forget previously learned knowledge" (Sun et al., 2019b). 
 
 
 
 
-\begin{program}
-\begin{wrapfigure}{L}{0.7\textwidth}
-    \centering
-    \includegraphics[width=0.65\textwidth]{imgs/ernie_continualMultitask.png}
+
+%%\begin{program}
+%\begin{wrapfigure}{L}{0.7\textwidth}
+%\begin{center}
+%    \includegraphics[width=0.6\textwidth]{imgs/multitaskExample.png}
 %\end{center}
+%%\vspace{-10pt}
+%\captionof{figure}{\footnotesize Example of multi-task learning. From \emph{ERNIE 2.0: A Continual Pre-Training Framework for Language Understanding}, by Sequeira, 2019. \url{https://medium.com/psyai/ernie-2-0-an-article-to-hopefully-answer-all-your-questions-b5df21a64090}. Copyright n.d. by n.d.}
+%%\vspace{-5pt}
+%\label{fig:multitaskexample}
+%\end{wrapfigure}
+
+\textbf{Multi-task learning} means learning multiple tasks simultaneously. An Encoder is shared across task-specific architectures. In multitask model training, data is batched and allocated for specific task training. All tasks take turns learning on their mini-batched data then separately update the shared encoder based on the loss. However, this separate, individual task learning affects the weights in the shared encoder, causing ``catastrophic forgetting" (Sequeira, 2019). 
+
+% An example is in \cref{fig:multitaskexample} where an Encoder is shared across task-specific architectures. 
+
+
+%\end{program}
+
+
+
+
+%\begin{program} % NOTE: program environment helps text start level with the wrapped figure, instead of filling up previous space. Was good for LSTM forget gates but here better without it. 
+
+
+
+%\begin{wrapfigure}{L}{0.7\textwidth}
+%    \begin{center}
+%        \includegraphics[width=0.65\textwidth]{imgs/ernie_continualMultitask.png}
+%    \end{center}
+%\vspace{-5pt}
+%\captionof{figure}{\footnotesize Continual multi-task framework in ERNIE 2.0, where encoder can be a \hyperref[sec:RNN]{recurrent neural network (RNN)} or \nameref{sec:Transformer}. From \emph{ERNIE 2.0: A Continual Pre-Training Framework for Language Understanding}, by Sequeira, 2019. \url{https://medium.com/psyai/ernie-2-0-an-article-to-hopefully-answer-all-your-questions-b5df21a64090}. Copyright n.d. by n.d.}
+%\vspace{-10pt}
+%\label{fig:ernie_continualMultitaskLearning}
+%\end{wrapfigure}
+
+Inspired by human's ability to continuously accumulate information from past experience to develop new skills, \textbf{continual multi-task learning}  combines \textbf{continual learning} and \textbf{multi-task learning}. Humans do not forget skating when learning how to ski; continual multi-task learning helps a model do likewise. It trains several tasks in parallel and the shared encoder is updated using the average of losses from all tasks. Specifically, for the first step, only Task 1 is learned and the encoder weights are updated from Task 1's loss. In step 2, the shared encoder is initialized with weights from the previous step and Task 1 and 2 are learned at the same time. Since the shared encoder has already learned from Task 1, only the loss from Task 2 will mostly updated the shared encoder, while retaining Task 1 information. Next, average loss is calculated to update the shared encoder. These steps continue until the model has trained on all tasks (Sequeira, 2019). ERNIE has two kinds of loss functions: the token-level loss and the sentence-level loss. In this way, ERNIE is similar to the \nameref{sec:TransformerXL} which respects sentence structure. During pre-training, ERNIE combines the sentence-level loss function with multiple token-level loss functions to update the model continually (Sun et al., 2019b). 
+
+%\end{program}
+
+
+
+
+\subsection{Continual Pre-Training}\label{sec:ContinualPreTraining}
+
+ERNIE 2.0's pre-training component differs from previous pre-training ones since rather than using few pre-training objectives, it continually interweaves a large variety of \hyperref[sec:WordAwarePretrainingTask]{word-aware}, \hyperref[sec:StructureAwarePretrainingTask]{structure-aware}, and \hyperref[sec:SemanticAwarePretrainingTask]{semantic-aware} pre-training tasks for capturing lexical, syntactic and semantic representations. The \textbf{continual pre-training} procedure has two steps: (1) continually create unsupervised pre-training tasks with large data and prior knowledge (like named entities, phrases, and discourse relations), and (2) use \hyperref[sec:ContinualMultiTaskLearning]{continual multi-task learning} to update ERNIE incrementally (Sun et al., 2019b). All the pre-training tasks are classification types and are described below. 
+
+\subsubsection{Word-Aware Pre-Training Tasks}\label{sec:WordAwarePretrainingTask}
+
+These tasks help ERNIE learn better representations at the word level. Closely following descriptions from Sun et al. (2019b): 
+
+\begin{itemizeSpaced}{4pt}
+    \item \textbf{Knowledge-Masking Task: }ERNIE masks words, phrases, and named entities then predicts them to learn dependency in local and global contexts. 
+    
+    \item \textbf{Capitalization Prediction Task: }to classify whether a word is capitalizated or not. The reason for this task is that capitalized words usually specific kinds of semantic information compared to latter words in a sentence. 
+    
+    \item \textbf{Token-Document Relation Prediction Task: } this task predicts if a token in a segment appears in other segments of the original document. The reason for this is that words appearing many times are common or relevant to the document's topic, and so can help the model capture the document's theme. 
+    
+\end{itemizeSpaced}
+
+
+
+\subsubsection{Structure-Aware Pre-Training Tasks}\label{sec:StructureAwarePretrainingTask}
+
+Structure-aware pre-training tasks help the model learn how sentences are related in a document. 
+
+\begin{itemizeSpaced}{4pt}
+
+    \item \textbf{Sentence Reordering Task: }a paragraph is broken into chunks, shuffled, and the model must reorder the shuffled segments into the original paragraph. 
+    
+    \item \textbf{Sentence Distance Task: }the model classifies if ``0" two sentences are adjacent in the same document, ``1" two sentences are in the same document but not adjacent, and ``2" two sentences are from two different documents.
+\end{itemizeSpaced}
+
+
+
+\subsubsection{Semantic-Aware Pre-Training Tasks}\label{sec:SemanticAwarePretrainingTask}
+
+These tasks help ERNIE learn the semantics of sentences. 
+
+\begin{itemizeSpaced}{4pt}
+
+    \item \textbf{Discourse Relation Task: }to predict the semantic or rhetorical relation between two sentences. For example, ``The pine tree crashed to the ground. \textit{[because]} The strong mountain winds were merciless." The model must predict the discourse marker ``because", showing it learns the contrast between the two sentences, and in doing so, their semantics. 
+    
+    \item \textbf{Information Retrieval (IR) Relevance Task: }given a pair of user query and a document, the task is to classify if the document is strongly-relevant, weakly-relevant, or irrelevant or random to the user query, in terms of semantic information. This task helps ERNIE learn the semantics of the user query with respect to the document title. 
+    
+\end{itemizeSpaced}
+
+
+
+\subsection{Experimental Results of ERNIE 2.0}\label{sec:ExperimentalResultsERNIE2}
+
+In \cref{tbl:ernie2_bert_xlnet_expresults}, ERNIE 2.0 outperforms \nameref{sec:BERT} and even \nameref{sec:XLNet} for most of the English tasks, as measured by GLUE benchmark (Sun et al., 2019b). 
+
+\begin{figure}[h]
 \vspace{-5pt}
-\captionof{figure}{\footnotesize Continual multi-task learning in ERNIE. From \emph{ERNIE 2.0: A CONTINUAL PRE-TRAINING FRAMEWORK FOR LANGUAGE UNDERSTANDING}, by Sequeira, 2019. \url{https://medium.com/psyai/ernie-2-0-an-article-to-hopefully-answer-all-your-questions-b5df21a64090}. Copyright n.d. by n.d.}
-\vspace{-10pt}
-\label{fig:ernie_continualMultitaskLearning}
-\end{wrapfigure}
+\centering
+\includegraphics[width=0.9\textwidth]{imgs/ernie2_tableBERTvsERNIE2vsXLNET.png}
+\vspace{-5pt}
+\captionof{table}{\footnotesize Results on GLUE benchmark, where dev set contains medium of five runs and test set is scored by GLUE server. State of the art results are in bold. From \emph{Table 5 in ERNIE 2.0: A Continual Pre-Training Framework for Language Understanding}, by Sun et al., 2019. \url{https://arxiv.org/pdf/1907.12412.pdf}. Copyright 2019 by Sun et al.}
+\vspace{-5pt}
+\label{tbl:ernie2_bert_xlnet_expresults}
+\end{figure}
 
-ERNIE 2.0 however combines these two features into \textbf{continual multi-task learning}; several tasks are trained in parallel and the shared encoder is updated using the average of losses from all tasks. This is shown in \cref{fig:ernie_continualMultitaskLearning}. Specifically, for the first step, only Task 1 is learned and the encoder weights are updated from Task 1's loss. In step 2, the shared encoder is initialized with weights from the previous step and Task 1 and 2 are learned at the same time. Since the shared encoder has already learned from Task 1, only the loss from Task 2 will mostly updated the shared encoder, while retaining Task 1 information. Next, average loss is calculated to update the shared encoder. These steps continue until the model has trained on all tasks (Sequeira, 2019). 
+The models \nameref{sec:BERT}, \nameref{sec:XLNet}, and \nameref{sec:ERNIE_2} were compared on Chinese tasks: machine reading comprehension (MRC) (CMRC dataset), \nameref{nlptask:namedentityrecognitionNER} (MSRA-NER dataset), \nameref{nlptask:naturallanguageinferenceNLI} (XNLI dataset), \nameref{nlptask:sentimentanalysisSA} (ChnSenitCorp dataset), \nameref{nlptask:semantictextualsimilaritySTS} (LCQMC dataset), and \nameref{nlptask:questionansweringQA} (NLPCC-DBQA dataset). \cref{tbl:ernie2_bert_xlnet_expresults} shows that \nameref{sec:ERNIE_1} outperforms \nameref{sec:BERT} in several tasks, but not all, while \nameref{sec:ERNIE_2} outperforms both previous models on all tasks (Sun et al., 2019b). 
 
-\end{program}
 
+\begin{figure}[h]
+\vspace{-5pt}
+\centering
+\includegraphics[width=0.9\textwidth]{imgs/ernie2_tableBERTvs_e2_e1.png}
+\vspace{-5pt}
+\captionof{table}{\footnotesize Results of Chinese \hyperref[app:Appendix_NLPTasks]{nlp tasks}. State of the art results are bolded. From \emph{Table 6 in ERNIE 2.0: A Continual Pre-Training Framework for Language Understanding}, by Sun et al., 2019. \url{https://arxiv.org/pdf/1907.12412.pdf}. Copyright 2019 by Sun et al.}
+\vspace{-5pt}
+\label{tbl:ernie2_ernie1_bert_expresults}
+\end{figure}
+
+In \cref{tbl:ernie2_comparePretrainings}, we see how multi-task learning trains all tasks simultaneously, continual learning trains the tasks one by one, while ERNIE 2.0's continual multi-task learning can allocate different iterations to each task in the various stages of training. Continual multi-task learning scores higher on the MNLI, SST-2, and MRPC datasets than the other two pre-training methods, confirming the guess that separately, multi-task and continual learning are prone to forgetting and other inefficiencies (Sun et al., 2019b). 
+
+\begin{figure}[h]
+\vspace{-5pt}
+\centering
+\includegraphics[width=0.9\textwidth]{imgs/ernie2_tableComparePretrainings.png}
+\vspace{-5pt}
+\captionof{table}{\footnotesize Experimental results of the different continual pre-training methods, using knowledge-masking, capital prediction, token-document, and sentence reording pre-training tasks. From \emph{Table 7 in ERNIE 2.0: A Continual Pre-Training Framework for Language Understanding}, by Sun et al., 2019. \url{https://arxiv.org/pdf/1907.12412.pdf}. Copyright 2019 by Sun et al.}
+\vspace{-5pt}
+\label{tbl:ernie2_comparePretrainings}
+\end{figure}

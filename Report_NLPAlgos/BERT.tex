@@ -74,14 +74,16 @@ Training BERT using NSP is as follows: (1) sample sentence pairs \texttt{(A, B)}
 
 % NOTE: the top width must be +0.5 more than below texwidth measure
 \begin{program}
-\begin{wrapfigure}{L}{0.7\textwidth}
-\begin{center}
-    \includegraphics[width=0.53\textwidth]{imgs/table_bert_vsOtherModels.png}
-\end{center}
+\begin{wrapfigure}{L}{0.75\textwidth}
+    \begin{center}
+    \vspace{-10pt}
+    \includegraphics[width=0.6\textwidth]{imgs/table_bert_vsOtherModels.png}
+    \end{center}
+\vspace{-30pt}
 \captionof{table}{\footnotesize Accuracy (\%) of several models on \nameref{nlptask:sentimentclassificationSC} SST dataset. BERT has highest accuracy scores. From \emph{Table B.II in Fine-Grained Sentiment Classification Using BERT}, by Munikar et al., 2019. \url{https://arxiv.org/pdf/1910.03474.pdf}. Copyright 2019 by Munikar et al.}
-%\vspace{-5pt}
 \label{tbl:bertExperimentResults}
 \end{wrapfigure}
+
 
 Using a simple accuracy measure, Munikar et al. (2019) found that a pre-trained BERT model fine-tuned for \nameref{nlptask:sentimentanalysisSA} task outperformed complex models such as \hyperref[sec:RNN]{RNN}s and CNNs. The \cref{tbl:bertExperimentResults} includes results on phrases and entire reviews. 
 
