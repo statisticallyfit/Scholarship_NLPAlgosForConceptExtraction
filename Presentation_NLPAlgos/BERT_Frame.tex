@@ -1,16 +1,38 @@
+\begin{frame}{}
+    \begin{center}
+        \large \textbf{BERT (Bidirectional Encoder Representations from Transformers)}
+    \end{center}
+    \vspace{20pt}
+    
+    \textbf{Author(s):}
+    \begin{itemizeSpaced}{5pt}
+    {\color{DimGrey} 
+    
+        \item Devlin et al. (2019) in \emph{BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding}
+        
+        \item Clark et al. (2019) in \emph{What Does BERT Look At? An Analysis of BERT's Attention}
+        
+        \item Wiedemann et al. (2019) in \emph{Does BERT Make Any Sense? Interpretable Word Sense Disambiguation with Contextualized Embeddings}
+        
+        \item Munikar et al. (2019) in \emph{Fine-Grained Sentiment Classification Using BERT}
+        
+    }
+    \end{itemizeSpaced}
+\end{frame}
+
+% -------------------------------------------------
 
 
 
-\section{BERT (Bidirectional Encoder Representations from Transformers)}
 
-
-\begin{frame}{BERT: Motivation}
-    \normalsize 
+\begin{frame}{BERT: Motivation} 
     
     \begin{itemizeSpaced}{7pt}
-        \item \textbf{Problem with ELMo: } shallowly combines ``independently-trained" biLMs
+        \footnotesize 
         
-        \item \textbf{Problem with OpenAI GPT: }uses a left-to-right construction, where each token only attends to past tokens in the self attention layers of the Transformer $\Rightarrow$ cannot represent bidirectional context $\Rightarrow$ does poorly on \emph{sentence-level} and \emph{token-level} tasks (question answering (QA))
+        \pinkbox \textbf{Problem with ELMo: } shallowly combines ``independently-trained" biLMs
+        
+        \item \textbf{Problem with OpenAI GPT: }unidirectional model $\Rightarrow$ gets no bidirectional context $\Rightarrow$ does poorly on \emph{sentence-level} and \emph{token-level} tasks (question answering (QA))
 
         
         \pinkbox \textbf{BERT's Solution: } train ``deep bidirectional representations from unlabeled text by jointly conditioning on both left and right context in all layers” (Devlin et al., 2019).
@@ -20,17 +42,19 @@
 
 
 \begin{frame}{BERT: Input Embeddings}
-    \normalsize \linespread{0.5}
     
-    \begin{enumerateSpaced}{15pt}
-        \item \textbf{\textit{WordPiece} token embeddings: }The \emph{WordPiece} tokenization subdivides words to smaller units (instead of tokenizing by natural separations)
+    \begin{itemizeSpaced}{10pt}
+        \footnotesize 
         
-        \begin{itemizeSpaced}{15pt}
-            \normalsize \linespread{0.5}
+        \pinkbox  \textbf{\textit{WordPiece} token embeddings: } \emph{WordPiece} tokenization subdivides words to smaller units 
         
+        \vspace{7pt}
+        \begin{itemizeSpaced}{7pt}
+        
+            \footnotesize
             \item to handle rare, unknown words (Weng, 2019) and reduce vocabulary size while increasing amount of data available per word.
             
-            \item \textbf{Example: }if ``play" and ``**ing" and ``**ed" are present in the vocabulary but ``playing" and ``played" are not, then these can be recognized by their sub-units. 
+            \pinkbox \textbf{Example: }if \texttt{"play"} and \texttt{"**ing"} and \texttt{"**ed"} are present in the vocabulary but \texttt{"playing"} and \texttt{"played"} are not, then these can be recognized by their sub-units. 
         \end{itemizeSpaced}
         
         
@@ -39,7 +63,7 @@
         
         \item \textbf{Positional embeddings: } as in ordinary Transformer (to inject word order information). 
     
-    \end{enumerateSpaced}
+    \end{itemizeSpaced}
     
 \end{frame}
 
@@ -50,14 +74,10 @@
 
 \linespread{0.3} 
 
-BERT does \textbf{pre-training} (trains on \emph{unlabeled data} over different tasks), and \textbf{fine-tuning} (to use pre-training parameters to train over \emph{labeled data} for nlp tasks)
-
-This improves over language models that just predict next tokens given context. 
-
-Pre-training involves:  
+BERT does \textbf{pre-training} (trains on \emph{unlabeled data} using MLM and NSP), and \textbf{fine-tuning} (to use pre-training parameters to train over \emph{labeled data} for nlp tasks)
 
 
-{\large \textbf{Masked language model (MLM): }}
+{\small \textbf{Masked language model (MLM): }}
     \begin{itemizeSpaced}{5pt}
         \pinkbox \textbf{Motivation: } bidirectional conditioning causes information leakage (a word can implicitly ``see itself" letting the model trivially guess the target word in a multi-layered context (Devlin et al., 2019)). 
         
@@ -66,7 +86,7 @@ Pre-training involves:
         \item \textbf{Effect of MLM: } fuses left and right context to get \emph{deep} bidirectional context (unlike ELMo's shallow left-to-right language model (Devlin et al., 2019)).  
     \end{itemizeSpaced}
     
-{\large \textbf{Next Sentence Prediction (NSP):}}
+{\small \textbf{Next Sentence Prediction (NSP):}}
     \begin{itemizeSpaced}{5pt}
         \pinkbox \textbf{Motivation: } to capture \emph{sentence-level} information $\Rightarrow$ to do well in question-answering (QA) and natural language inference (NLI) tasks
         
@@ -78,35 +98,35 @@ Pre-training involves:
 \end{frame}
 
 
-\begin{frame}{BERT: General Experimental Results}
-
-    \begin{itemizeSpaced}{2pt}
-        \item Using a simple accuracy measure, Munikar et al. (2019) found that a pre-trained BERT model fine-tuned for \textbf{sentiment analysis (SA)} task outperformed complex models (RNN, CNNs).
-        
-        \pinkbox This proves \textbf{transfer learning} is possible with BERT's deep contextual bidirectional language model. 
-    \end{itemizeSpaced}
-
-
-
-    \begin{table}[ht!]
-      \centering
-      \vspace{-7pt}
-      
-      \begin{tabular}{ c }
-      
-        \begin{minipage}{.7\textwidth}
-          \includegraphics[width=\linewidth]{imgs/table_bert_vsOtherModels.png}
-        \end{minipage}
-        \vspace{-7pt}
-      
-      \end{tabular}
-      
-      \caption{\linespread{0.3} \footnotesize Accuracy (\%) of several models on \textbf{sentiment classification (SC)} SST dataset. BERT has highest accuracy scores. From \emph{Table B.II in Fine-Grained Sentiment Classification Using BERT}, by Munikar et al., 2019. \url{https://arxiv.org/pdf/1910.03474.pdf}. Copyright 2019 by Munikar et al.}
-      \label{tbl:bertExperimentResults}
-      \vspace{-10pt}
-    \end{table}
-    
-\end{frame}
+% \begin{frame}{BERT: General Experimental Results}
+% 
+%     \begin{itemizeSpaced}{2pt}
+%         \item Using a simple accuracy measure, Munikar et al. (2019) found that a pre-trained BERT model fine-tuned for \textbf{sentiment analysis (SA)} task outperformed complex models (RNN, CNNs).
+%         
+%         \pinkbox This proves \textbf{transfer learning} is possible with BERT's deep contextual bidirectional language model. 
+%     \end{itemizeSpaced}
+% 
+% 
+% 
+%     \begin{table}[ht!]
+%       \centering
+%       \vspace{-7pt}
+%       
+%       \begin{tabular}{ c }
+%       
+%         \begin{minipage}{.7\textwidth}
+%           \includegraphics[width=\linewidth]{imgs/table_bert_vsOtherModels.png}
+%         \end{minipage}
+%         \vspace{-7pt}
+%       
+%       \end{tabular}
+%       
+%       \caption{\linespread{0.3} \footnotesize Accuracy (\%) of several models on \textbf{sentiment classification (SC)} SST dataset. BERT has highest accuracy scores. From \emph{Table B.II in Fine-Grained Sentiment Classification Using BERT}, by Munikar et al., 2019. \url{https://arxiv.org/pdf/1910.03474.pdf}. Copyright 2019 by Munikar et al.}
+%       \label{tbl:bertExperimentResults}
+%       \vspace{-10pt}
+%     \end{table}
+%     
+% \end{frame}
 
 
 
@@ -114,7 +134,7 @@ Pre-training involves:
 
 
     \begin{columns}
-    
+        
         \begin{column}{0.6\textwidth}
             %\vspace{\topsep}
             \vspace{5pt}
@@ -123,7 +143,7 @@ Pre-training involves:
             \end{center}
             \vspace{-10pt}
             
-            \captionof{figure}{\linespread{0.3}\footnotesize BERT attention heads capture syntax. In heads 8-10, direct objects are found to attend to their verbs. Line darkness indicates attention strength. Red indicates attention to/from red words, to highlight certain attentional behaviors. From \emph{What Does BERT Look At? An Analysis of BERT's Attention}, by Clark et al., 2019. \url{https://arxiv.org/abs/1906.04341}. } 
+            \captionof{figure}{\tiny \linespread{0.2} BERT attention heads capture syntax. In heads 8-10, direct objects are found to attend to their verbs. Line darkness indicates attention strength. Red indicates attention to/from red words, to highlight certain attentional behaviors. From \emph{What Does BERT Look At? An Analysis of BERT's Attention}, by Clark et al., 2019. \url{https://arxiv.org/abs/1906.04341}. } 
             \label{fig:bertHeadDirectObject}
         \end{column}
         
@@ -133,6 +153,7 @@ Pre-training involves:
             
             \begin{itemizeSpaced}{10pt}
             
+                %\scriptsize
                 %\item  While BERT's attention heads do not capture syntax dependency structure as a whole....
             
                 %\item ... different heads are better at detecting different syntax dependency relationships.
@@ -155,8 +176,6 @@ Pre-training involves:
 
 
 \begin{frame}{Probing BERT: BERT's Limitation in Segment Representation}
-    \normalsize
-    \linespread{0.4}
     
     \begin{itemizeSpaced}{10pt}
         \item BERT does not use separator tokens (\texttt{[SEP]}) to gather segment-level information. 
@@ -166,8 +185,6 @@ Pre-training involves:
         \item How? Why? Authors investigated in two ways ...
         
         \begin{itemizeSpaced}{10pt}
-        
-        \normalsize \linespread{0.4}
         
             \item If this were true, attention heads processing \texttt{[SEP]} should attend broadly over entire segment to make the segment vectors. But in \cref{fig:bertHeadDirectObject}, heads 8-10 show direct objects attend to their verbs, and all other words attend to the \texttt{[SEP]} token. 
             
@@ -187,20 +204,24 @@ So, BERT's attention heads attend to \texttt{[SEP]} when they have no other job,
 
 
 
-\begin{frame}{(continued) Probing BERT: BERT's Limitation in Segment Representation}
+\begin{frame}{Probing BERT: BERT's Limitation in Segment Representation}
+    
+    \vspace{10pt}
 
     \begin{figure}
     \centering
     \begin{minipage}{.47\textwidth}
       \centering
       \includegraphics[width=\textwidth]{imgs/bert_attentionSEP_singleimage.png}
-      \captionof{figure}{\linespread{0.3}\footnotesize BERT's attention heads in layers 6-10 spend more than half the average attention to separator tokens; deep heads attend to punctuation, while middle heads attend to \texttt{[SEP]}, and early heads attend to \texttt{[CLS]}. From \emph{What Does BERT Look At? An Analysis of BERT's Attention}, by Clark et al., 2019. \url{https://arxiv.org/abs/1906.04341}. Copyright 2019 by Clark et al.}
+      \vspace{-10pt}
+      \captionof{figure}{\linespread{0.1} BERT's attention heads in layers 6-10 spend more than half the average attention to separator tokens; deep heads attend to punctuation, while middle heads attend to \texttt{[SEP]}, and early heads attend to \texttt{[CLS]}. From \emph{What Does BERT Look At? An Analysis of BERT's Attention}, by Clark et al., 2019. \url{https://arxiv.org/abs/1906.04341}. Copyright 2019 by Clark et al.}
       \label{fig:bertSEPAttention}
     \end{minipage} \hspace{2em}%
     \begin{minipage}{.47\textwidth}
       \centering
       \includegraphics[width=\textwidth]{imgs/bert_attentionheads_gradient.png}
-      \captionof{figure}{\linespread{0.3}\footnotesize Gradient-based estimates for attention to separator and punctuation tokens. Authors ``compute the magnitude of the gradient of the loss from the masked-language model (MLM) task with respect to each attention weight." From \emph{What Does BERT Look At? An Analysis of BERT's Attention}, by Clark et al., 2019. \url{https://arxiv.org/abs/1906.04341}. Copyright 2019 by Clark et al.}
+      \vspace{-15pt}
+      \captionof{figure}{\linespread{0.1} Gradient-based estimates for attention to separator and punctuation tokens. Authors ``compute the magnitude of the gradient of the loss from the masked-language model (MLM) task with respect to each attention weight." From \emph{What Does BERT Look At? An Analysis of BERT's Attention}, by Clark et al., 2019. \url{https://arxiv.org/abs/1906.04341}. Copyright 2019 by Clark et al.}
       \label{fig:bertGradient}
     \end{minipage}
     \end{figure}
@@ -212,26 +233,29 @@ So, BERT's attention heads attend to \texttt{[SEP]} when they have no other job,
 
 \begin{frame}{BERT's Attempt at Polysemy}
     
-    \begin{itemizeSpaced}{15pt}
-    \linespread{0.3}
-        \item Wiedemann et al. (2019) compared the contextual embeddings (CWE)s of ELMo and BERT on \textbf{word sense disambiguation (WSD)} task $\Rightarrow$ BERT places polysemic words into distinct regions according to their senses, while ELMo cannot (stronger word sense separation in BERT embeddings). 
+    \vspace{15pt}
+    
+    \begin{itemizeSpaced}{7pt}
+    
+        \item ELMo and BERT were compared on \textbf{word sense disambiguation (WSD)} task $\Rightarrow$ BERT more strongly separates polysemic word senses while ELMo cannot. 
         
         \item BERT did well when the text had ...
+        \vspace{5pt}
         \begin{itemizeSpaced}{7pt}
-        \linespread{0.3}
-            \item \textit{vocabulary overlap} {``along the bank of the river” (input text) and ``along the bank of the river Greta” (nearest neighbor found by BERT)}. 
+            \item \textit{vocabulary overlap}  \texttt{"along the bank of the river"} (input text) and \texttt{"along the bank of the river Greta"} (nearest neighbor found by BERT). 
             
-            \item \textit{semantic overlap} {``little earthy bank” (input) and ``huge bank [of snow]” (nearest neighbor found by BERT)}
+            \item \textit{semantic overlap} \texttt{"little earthy bank”} (input) and \texttt{"huge bank [of snow]”} (nearest neighbor found by BERT)
         \end{itemizeSpaced}
         
         \item BERT struggled when text had \emph{vocabulary and semantic overlap at the same time}
+        
         \begin{itemizeSpaced}{7pt}
-            \linespread{0.3}
-            \item \underline{False prediction 1}: BERT predicted ``land bank" as in a \emph{supply or stock} while the correct sense of ``land bank" was \emph{financial institution}
+        
+            %\item \underline{False prediction 1}: BERT predicted \texttt{"land bank" as in a \emph{supply or stock} while the correct sense of \texttt{"land bank" was \emph{financial institution}
             
-            \item \underline{False prediction 2}: correct word sense of ``balloon" is a verb while BERT predicted a noun sense, so it did not even get the word class correct.
+            \item \underline{False prediction 1}: correct word sense of \texttt{"balloon"} is a verb while BERT predicted a noun sense, so it did not even get the word class correct.
             
-            \item \underline{False prediction 3}: correct sense of ``watch" was \emph{to look attentively} while BERT predicted its sense as \emph{to follow with the eyes or the mind; observe}. 
+            \item \underline{False prediction 2}: correct sense of \texttt{"watch"} was \emph{to look attentively} while BERT predicted its sense as \emph{to follow with the eyes or the mind; observe}. 
         \end{itemizeSpaced}
         
     \end{itemizeSpaced}

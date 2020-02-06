@@ -1,29 +1,46 @@
 
 
-\section{Sequence-To-Sequence Model}
+
+\begin{frame}{}
+    \begin{center}
+        \large \textbf{Sequence to Sequence Model}
+    \end{center}
+    \vspace{20pt}
+    
+    \textbf{Author(s):}
+    \begin{itemizeSpaced}{5pt}
+    {\color{DimGrey} 
+        \item Sutskever et al. (2014) in \emph{Sequence To Sequence Learning with Neural Networks}
+        
+    }
+    \end{itemizeSpaced}
+\end{frame}
+
+% -------------------------------------------------
+
+
 
 
 \begin{frame}{Seq-To-Seq Model (Brief Overview)}
     
-    \normalsize 
-    {\linespread{0.3}
-    
     \begin{itemizeSpaced}{7pt}
-        \pinkbox Used for machine translation task. \textbf{Encoder} takes in sequence of tokens (words, phrases), processes inputs into a \emph{fixed-length} \textbf{context vector}, and sends it to \textbf{Decoder} that outputs another sequence of tokens. 
+        \pinkbox Used for machine translation task. 
         
-        \item Encoder, Decoder are often RNN's \footnotemark like LSTMs\footnotemark and GRUs\footnotemark. 
+        \item \textbf{Encoder} takes in sequence of tokens (words, phrases), processes inputs into a \emph{fixed-length} \textbf{context vector}, and sends it to \textbf{Decoder} that outputs another sequence of tokens. 
+        
+        \item Encoder, Decoder are often RNNs \footnotemark like LSTMs\footnotemark and GRUs. \footnotemark 
         
         \pinkbox {\color{Crimson} \textbf{Problem: }} compressing inputs into \textbf{fixed-length vector} causes \textbf{long-term dependency problem} (memory loss) since only the \emph{last hidden Encoder state is used}. 
         
         \pinkbox {\color{ForestGreen} \textbf{Solution: }}to use \textbf{attention mechanism} for selectively focusing on parts of the inputs as required (creates a context vector for \emph{each time step or word}, so all Encoder's output hidden states are used in Decoder)
         
         
-    \end{itemizeSpaced} }
+    \end{itemizeSpaced} 
     
-    \footnotetext[5]{\footnotesize RNN stands for \textbf{recurrent neural network}, which has a looping mechanism to share hidden states. Suffers from \textbf{long-term dependency problem}}
+    \footnotetext[3]{ RNN stands for \textbf{recurrent neural network}, which has a looping mechanism to share hidden states. Suffers from \textbf{long-term dependency problem} \vspace{-30pt}}
     
-    \footnotetext[6]{\footnotesize LSTM means \textbf{long-short term memory network}, and uses forget gates to regulate memory and information flow}
+    \footnotetext[4]{LSTM means \textbf{long-short term memory network}, and uses forget gates to regulate memory and information flow \vspace{-30pt}}
     
-    \footnotetext[7]{\footnotesize GRU means \textbf{gated-recurrent network}, and is a condensed version of LSTM. }
+    \footnotetext[5]{GRU means \textbf{gated-recurrent network}, and is a condensed version of LSTM. }
     
 \end{frame}

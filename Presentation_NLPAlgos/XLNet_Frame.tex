@@ -1,21 +1,39 @@
 
 
-\section{XLNet}
+
+\begin{frame}{}
+    \begin{center}
+        \large \textbf{XLNet}
+    \end{center}
+    \vspace{20pt}
+    
+    \textbf{Author(s):}
+    \begin{itemizeSpaced}{5pt}
+    {\color{DimGrey} 
+    
+        \item Yang et al. (2020) in \emph{XLNet: Generalized Autoregressive Pretraining for Language Understanding}
+        
+    }
+    \end{itemizeSpaced}
+\end{frame}
+
+% -------------------------------------------------
+
 
 
 \begin{frame}{XLNet: Problems with BERT}
 
-\begin{itemizeSpaced}{7pt}
-    \pinkbox An \textbf{autoregressive language model (AR)} autoregressively estimates the probability distribution of a text sequence by factorizing a likelihood using tokens \emph{before} a timestep, or tokens \emph{after} a timestep. A neural network is trained to model either the forward or backward distribution $\Rightarrow$ cannot model bidirectional context. 
+\begin{itemizeSpaced}{10pt}
+    \pinkbox An \textbf{autoregressive language model (AR)} estimates the probability distribution of a text sequence by factorizing a likelihood using tokens \emph{before} a timestep, or tokens \emph{after} a timestep $\Rightarrow$ cannot model bidirectional context. 
     
-    \item An \textbf{autoencoding language model (AE)} like BERT is like a masked language model. It masks tokens, predicts them and does not estimate densities like AR $\Rightarrow$ can learn bidirectional contexts. 
+    \item An \textbf{autoencoding language model (AE)} like BERT is a masked language model $\Rightarrow$ does not estimate densities like AR $\Rightarrow$ can learn bidirectional contexts. 
     
     \pinkbox \textbf{BERT's problems: }
-    \begin{itemizeSpaced}{7pt}
+    \begin{itemizeSpaced}{10pt}
         
-        \item \textbf{False Independence Assumption: } BERT factorizes its log likelihood probability assuming all masked tokens are rebuilt independently of each other (so BERT ignores long-term dependencies within texts)
+        \item \textbf{False Independence Assumption: } BERT factorizes its log likelihood probability \alert{assuming all masked tokens are rebuilt independently of each other (so BERT ignores long-term dependencies within texts)}
         
-        \item \textbf{Data Corruption: }Masked tokens do not appear in real data during fine-tuning, so since BERT uses them in pre-training, a discrepancy arises between these two steps. 
+        \item \textbf{Data Corruption: }Masked tokens do not appear in real data during fine-tuning, so since BERT uses them in pre-training, a \alert{discrepancy} arises between these two steps. 
     \end{itemizeSpaced}
     
     
@@ -28,52 +46,56 @@
 
 \begin{frame}{XLNet: Example of BERT's False Independence Assumption}
     
-\begin{exampleBlock}{Example: BERT predicting tokens independently}
-``I went to the \texttt{[MASK]} \texttt{[MASK]} and saw the \texttt{[MASK]} \texttt{[MASK]} \texttt{[MASK]}." 
-
-Two ways to fill this are: 
-
-``I went to \emph{New York} and saw the \textit{Empire State building}," or
-
-``I went to \emph{San Francisco} and saw the \emph{Golden Gate bridge}."
-
-But BERT might incorrectly predict something like: ``I went to \emph{San Francisco} and saw the \emph{Empire State building}." 
-
-Independence assumption + predicting masked tokens simultaneously $\Rightarrow$ BERT fails to learn their interlocking dependencies $\Rightarrow$ weakens the ``learning signal" (Kurita, 2019b). 
-\end{exampleBlock}
+    \vspace{10pt}
+    
+    \begin{exampleBlock}{Example: BERT predicting tokens independently}
+    \footnotesize 
+    
+    ``I went to the \texttt{[MASK]} \texttt{[MASK]} and saw the \texttt{[MASK]} \texttt{[MASK]} \texttt{[MASK]}." \newline 
+    
+    Two ways to fill this are: \newline
+    
+    ``I went to \underline{New York} and saw the \underline{Empire State building}," or\newline
+    
+    ``I went to \underline{San Francisco} and saw the \underline{Golden Gate bridge}."\newline
+    
+    But BERT might incorrectly predict something like: ``I went to \underline{San Francisco} and saw the \underline{Empire State building}." \newline
+    
+    Independence assumption + predicting masked tokens simultaneously $\Rightarrow$ BERT fails to learn their interlocking dependencies $\Rightarrow$ weakens the ``learning signal" (Kurita, 2019b). 
+    \end{exampleBlock}
 
 \end{frame}
 
 
 \begin{frame}{XLNet: Motivation}
 
-\large 
-
-To keep benefits of both autoencoding and autoregressive modeling while avoiding their issues...
-
-\begin{enumerateSpaced}{7pt}
-    \item XLNet adopts an AR model so that probability of a token can be factored via product rule, eliminating BERT's false independence assumption. 
+    \footnotesize  
     
-    \item XLNet uses \textbf{permutation language model} to capture bidirectional context AND \textbf{two-stream attention} to adapt its Transformer to create target-aware predictions. 
-\end{enumerateSpaced}
+    To keep benefits of both autoencoding and autoregressive modeling while avoiding their issues...
+    
+    \begin{enumerateSpaced}{7pt}
+        \item XLNet adopts an AR model so that probability of a token can be factored via product rule, eliminating BERT's false independence assumption. 
+        
+        \item XLNet uses \textbf{permutation language model} to capture bidirectional context AND \textbf{two-stream attention} to adapt its Transformer to create target-aware predictions. 
+    \end{enumerateSpaced}
     
 \end{frame}
 
 
 
-\begin{frame}{XLNet; Permutation Language Model}
+\begin{frame}{XLNet: Permutation Language Model}
     
+    \vspace{10pt}
+    
+    
+    \footnotesize 
     
     \textbf{Created so that: } a model can be trained to use \textbf{bidirectional context} while avoiding masking and its resulting problem of independent predictions.
 
-    \vspace{20pt}
-    
     \begin{definitionBlock}{Definition: Permutation Language Model}
-    Like language models, a \textbf{permutation language model} predicts unidirectionally. 
+    Like language models, a \textbf{permutation language model} predicts unidirectionally but in \emph{random order}. \newline 
     
-    But instead of predicting in order, the model predicts tokens in a random order. 
-    
-    Is forced to accumulate bidirectional context by finding dependencies between \emph{all} possible input combinations. 
+    \emph{Forced to accumulate bidirectional context by finding dependencies between \emph{all} possible input combinations.} \newline 
     
     (NOTE: only permutes factorization order, not order of word inputs)
     \end{definitionBlock}
@@ -82,33 +104,37 @@ To keep benefits of both autoencoding and autoregressive modeling while avoiding
 
 
 \begin{frame}{XLNet: Target-Aware Predictions}
-    \begin{itemizeSpaced}{5pt}
-        \item {\color{Crimson} \textbf{Problem: }} Trying to merge permutation language model and Transformer made XLNet’s target predictions blind to the permutation positions generated by the permutation language model.
 
-        \item Fault is due to Transformer: while predicting a token at a position, the model masks the token’s embedding AND also its \emph{positional} encoding $\Rightarrow$ Transformer remains blind about the position of the target it should be predicting $\Rightarrow$  sentence cannot be accurately represented (since positions like the beginning of a sentence have different distributions from other positions in the sentence.)
+    \vspace{10pt}
+
+    \begin{itemizeSpaced}{10pt}
+        \pinkbox {\color{Crimson} \textbf{Problem: }} Trying to merge permutation language model and Transformer made XLNet’s target predictions blind to the permutation positions generated by the permutation language model.
+
+        \item Fault is due to Transformer: while predicting a token at a position, the model masks the token’s embedding AND also its \emph{positional} encoding $\Rightarrow$ Transformer remains blind about the position of the target it should be predicting. 
         
-        \item {\color{ForestGreen} \textbf{Solution: Target-awareness: }} authors adapted the predictive distribution to take the target position as an argument $\Rightarrow$ now can create target-aware embeddings. 
+        %$\Rightarrow$  sentence cannot be accurately represented (since positions like the beginning of a sentence have different distributions from other positions in the sentence.)
         
-        \item {\color{Crimson} \textbf{Another problem}: }aforementioned problem with Transformer creates a contradiction: (1) to predict the content token $x_{z_t}$, only the position is needed, not the content $x_{z_t}$, and (2) to predict all other tokens $x_{z_j}$, the content token is  needed. 
+        \item {\color{ForestGreen} \textbf{Solution: Target-awareness: }} now, predictive distribution takes target position as argument $\Rightarrow$ creates target-aware embeddings. 
+        
+        %\pinkbox {\color{Crimson} \textbf{Another problem}: }Transformer nature makes contradiction: (1) to predict the content token $x_{z_t}$, only the position is needed, not the content $x_{z_t}$, and (2) to predict all other tokens $x_{z_j}$, the content token is  needed. 
         
         \item {\color{ForestGreen} \textbf{Two-Stream Attention: }}uses two sets of hidden states (content stream and query stream) to create an overall hidden state. 
         
-        {\linespread{0.3}
         \begin{itemizeSpaced}{5pt}
-            \item \textbf{Content-Stream Attention: } encodes \emph{context} like an ordinary Transformer, along with the \emph{content} (prediction) token $x_{z_t}$
+            \item \textbf{Content-Stream Attention: } takes \emph{context} and \emph{content} (prediction) token $x_{z_t}$ (like ordinary Transformer)
             
-            \item \textbf{Query-Stream Attention: }encodes \emph{context} with target token's \emph{position} but NOT content (prediction) token $x_{z_t}$ (to evade the contradiction). 
-        \end{itemizeSpaced} }
+            \item \textbf{Query-Stream Attention: }takes \emph{context} and target's \emph{position} but NOT content (prediction) $x_{z_t}$ (to evade the contradiction). 
+        \end{itemizeSpaced} 
         
     \end{itemizeSpaced}
 \end{frame}
 
 
 \begin{frame}{XLNet: Relative Segment Encodings}
-    \normalsize
+    \small XLNet adopts Transformer-XL's idea of relative encodings ... 
+    
     \begin{itemizeSpaced}{10pt}
-        \item XLNet adopts Transformer-XL's idea of relative encodings. 
-        
+        \small 
         \item BERT's segment embeddings distinguish words belonging to different segments. 
         
         \pinkbox XLNet's segment embeddings encode if two words are \emph{within the same segment} rather than \emph{which specific segments the words are from} $\Rightarrow$ can apply XLNet to tasks that intake arbitrarily many sequences. 
@@ -119,8 +145,8 @@ To keep benefits of both autoencoding and autoregressive modeling while avoiding
 
 \begin{frame}{XLNet: Conceptual Difference with BERT}
 
-Illustrating the conceptual difference between XLNet and BERT from a model training standpoint: 
-
+    \vspace{20pt}
+    
     \begin{exampleBlock}{Example: Conceptual Difference between XLNet and BERT}
     
 

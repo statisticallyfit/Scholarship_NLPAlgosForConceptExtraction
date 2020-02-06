@@ -1,52 +1,41 @@
-\documentclass[10pt, svgnames]{beamer}
-% adding svgnames options to the documentclass isntead since xcolor has already been loaded by metropolis
+\documentclass[english,svgnames,notes=hide,14pt]{beamer}
+\usepackage{macros-ohp}
+
+%\def\presentationtitle{Study and Application of Concept-Extraction \\ Algorithms in Statistical and \\ Programming Sciences}
+
+\def\presentationtitle{Study and Application of Concept-Extraction \\ Algorithms in Natural Language Processing (NLP)}
 
 
-\usepackage{macros}
+\title{\large\presentationtitle}
+\author{Ana-Maria Vintila\\
+		\small Supervised by Professor Brenda Vo\\
+		\small University of New England, Australia
+	}
 
+%Please make sure the tex is compiled twice to have all the images displayed correctly.
 
-
-
-% Set up table font ---------------------------
-% Use this for \begin{tableFont} ... \end{tableFont}
-\newenvironment{tableFont}{\setmainfont{Overlock}\selectfont}{\par}
-
-
-
-
-% TItle page -----------------------------------------------------------
-
-
-\def\presentationtitle{Study and Application of Concept-Extraction \newline Algorithms in Natural Language Processing (NLP)}
-
-
-\title{\LARGE \presentationtitle}
-\author{Ana-Maria Vintila\newline
-	\small Supervised by Professor Brenda Vo
-}
-\institute{University of New England, Australia}
-
+%Fill the date or leave it blank to not display it
 \date{}
 
-
-
 \begin{document}
+\thispagestyle{empty}
+%\begin{frame}[plain] %put [plain] at the end to get rid of the page number on this page
+\begin{frame}
+  \titlepage
+  
+\end{frame}
 
-\maketitle
-
-%\begin{frame}{Table of contents}
-%  \setbeamertemplate{section in toc}[sections numbered]
-%  \tableofcontents%[hideallsubsections]
-%\end{frame}
 
 
+% Line spacing
+\linespread{1.0}
 % Change font size:
 \ContentFontSize
 
 \input{Intro_Me_Frame.tex}
 
 \input{Intro_Frame.tex}
-\input{WordEmb_Frame.tex}
+\input{WordEmbeddings_Frame.tex}
 \input{LanguageModels_Frame.tex}
 \input{Word2Vec_Frame.tex}
 \input{GloVe_Frame.tex}
@@ -58,4 +47,21 @@
 \input{XLNet_Frame.tex}
 \input{ERNIE_Frame.tex}
 
+\input{Questions_Frame.tex}
+\input{References_Frame.tex}
+
+
+
+
 \end{document}
+
+
+
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-PDF-mode: t 
+%%% TeX-master: t
+%%% End: 

@@ -1,18 +1,37 @@
 
+\begin{frame}{}
+    \begin{center}
+        \large \textbf{ELMo: Embeddings from Language Models}
+    \end{center}
+    \vspace{20pt}
+    
+    \textbf{Author(s):}
+    \begin{itemizeSpaced}{5pt}
+    {\color{DimGrey} 
+        \item Peters et al. (2018) in \emph{Deep Contextualized Word Representations}
+        
+    }
+    \end{itemizeSpaced}
+\end{frame}
 
-\section{ELMo (Embeddings from Language Models)}
+% -------------------------------------------------
+
 
 
 \begin{frame}{ELMo: Motivation}
-    \large \linespread{0.4}
+    \footnotesize  
     
-    \textbf{Motivation for ELMo: }Remember \textbf{polysemy}? Contextual embeddings create one vector per word type in a context. 
+    Remember \textbf{polysemy}? \newline 
+    
+    ELMo makes contextual embeddings of a word according to its senses, so that ...
     
     \begin{exampleBlock}{Example}
-        If instead models used only word and character embedding, the homonyms ``book" (text) and ``book" (reservation) are assigned the \emph{same vector representation even though these are different words}. 
+        ... homonyms ``book" (text) and ``book" (reservation) get different vectors, not different meanings collapsed in one vector...\newline 
         
-        This vector representation may of course be created using context (as from Word2Vec or GloVe) but contextual meanings get \emph{collapsed into a single representation}.
+        Better than Word2Vec and GloVe!
+        
     \end{exampleBlock}
+    
     
     
 \end{frame}
@@ -20,7 +39,7 @@
 
 
 \begin{frame}{ELMo: Structure}
-
+    \vspace{20pt}
     \begin{itemizeSpaced}{2pt}
         \pinkbox \textbf{ELMo} uses bidirectional language model (biLM) to make \emph{deep} word embeddings (derived from all its internal layers)
 
@@ -28,26 +47,24 @@
         
         \pinkbox Lower layers capture syntax information (useful for part of speech tagging (POS)). 
         
-        \pinkbox Mixing these signals let ELMo's embeddings select the types of semi-supervision most needed for each end task $\Rightarrow$ ELMo embeddings are thus richer than traditional word vectors. 
-        
-        \item \textbf{Task-Specific: } ELMo is a task-specific combination of the intermediate layer representations in the biLM (collapses forward and backward hidden states into single embedding for a specific task by weighting the biLM layers): \footnotemark 
+        \item \textbf{Task-Specific: } ELMo mixes the layers' signals in task-specific way: \footnotemark 
         $$
         \textbf{ELMo}_k^{task} = E \Big( R_k; \theta^{task} \Big) = \gamma^{task} \; \sum_{j=0}^L s_j^{task} \; \mathbf{h}_{kj}^{LM}
         $$ 
         
-        
+        \item ELMo embeddings are thus richer than traditional word vectors. 
     \end{itemizeSpaced}
     
-    \footnotetext[10]{ \footnotesize the vector $\mathbf{s}^{task} = \Big\{ s_j^{task} \Big\}$ of softmax-normalized weights and task-dependent scalar parameter $\gamma^{task}$ allow the model for the specific $task$ to scale the entire $\textbf{ELMo}_k^{task}$ vector. The index $k$ corresponds to a $k$-th word, and index $j$ corresponds to the $j$-th layer out of $L$ layers. Here, $h_{kj}^{LM}$ is the output of the $j$-th LSTM for word $k$, and $s_j$ is the weight of $h_{kj}^{LM}$ used to compute the representation for word $k$. }
+    \footnotetext[8]{ the vector $\mathbf{s}^{task} = \Big\{ s_j^{task} \Big\}$ of softmax-normalized weights and task-dependent scalar parameter $\gamma^{task}$ allow the model for the specific $task$ to scale the entire $\textbf{ELMo}_k^{task}$ vector. The index $k$ corresponds to a $k$-th word, and index $j$ corresponds to the $j$-th layer out of $L$ layers. Here, $h_{kj}^{LM}$ is the output of the $j$-th LSTM for word $k$, and $s_j$ is the weight of $h_{kj}^{LM}$ used to compute the representation for word $k$. }
     
     
 \end{frame}
 
 
 
-\begin{frame}{ELMo: Example and Key Feature}
+\begin{frame}{ELMo: Strengths in POS Tagging and Word Sense Disambiguation}
     
-    
+    \vspace{10pt}
     
     \begin{table}[ht!]
       \centering
@@ -58,17 +75,15 @@
         \end{minipage}
         \vspace{-7pt}
       \end{tabular}
-      \caption{\linespread{0.3} \scriptsize Nearest neighbors to ``play” using GloVe and the context embeddings from a biLM. From \emph{Table 4 in Deep Contextualized Word Representations}, by Peters et al., 2018. \url{https://arxiv.org/pdf/1802.05365.pdf}. Copyright 2018 by Peters et al.}
+      \caption{\linespread{0.3} \scriptsize Nearest neighbors to ``play” found by GloVe and biLM context embeddings. From \emph{Table 4 in Deep Contextualized Word Representations}, by Peters et al., 2018. \url{https://arxiv.org/pdf/1802.05365.pdf}. Copyright 2018 by Peters et al.}
       \label{tbl:elmoPlayExample}
       \vspace{-10pt}
     \end{table}
     
     
-    {\linespread{0.3}
-    \begin{itemizeSpaced}{4pt}
-        
-        \item \cref{tbl:elmoPlayExample} displays words nearest to polysemous word ``play" found using GloVe vs biLM. 
-        
+    \vspace{-10pt}
+    \begin{itemizeSpaced}{7pt}
+    
         \pinkbox GloVe's neighbors have different parts of speech, like verbs (``played", ``playing"), and nouns (``player", ``game") and only in the sport sense.
         
         
@@ -79,8 +94,8 @@
         \end{itemizeSpaced}        
             
     
-    \end{itemizeSpaced} }
+    \end{itemizeSpaced} 
     
-    \textbf{ELMo key feature: } learn context using part of speech tagging (POS) and word sense disambiguation (WSD).  
+    %\textbf{ELMo key feature: } learn context using part of speech tagging (POS) and word sense disambiguation (WSD).  
     
 \end{frame}
