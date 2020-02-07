@@ -1,0 +1,370 @@
+\usepackage{etex} %used to solve the "Beamer and No room for new \dimen" problem
+\usepackage{xyling}
+\usepackage{color}
+\usepackage{colortbl}
+%\usepackage[svgnames]{xcolor}
+\usepackage{xcolor}
+\usepackage{xspace}
+\usepackage{relsize}
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+\makeatletter
+\usepackage[english]{babel}
+\makeatother
+
+\usepackage{graphics}
+%\usepackage{graphicx}
+
+\def\changemargin#1#2{\list{}{\rightmargin#2\leftmargin#1}\item[]} \let\endchangemargin=\endlist
+%\usepackage{arydshln,slashbox,enumerate,amsmath}
+\usepackage{arydshln,enumerate,amsmath}
+\usepackage{framed,pifont}
+\usepackage{textcomp}
+\usepackage{geometry}
+\usepackage[absolute, overlay]{textpos}
+%\usepackage[texcoord,grid,gridunit=mm,gridcolor=red!10,subgridcolor=green!10]
+%{eso-pic}
+
+\usepackage[tikz]{bclogo}
+\newenvironment{hilit}[2][\bclampe]{\begin{bclogo}[couleur=blue!30,arrondi=0.1,logo=#1,ombre=true]{\smaller[2] #2}\smaller[2]}{\end{bclogo}}
+
+\definecolor{shadecolor}{rgb}{0.01,0.199,0.1}
+
+\mode<presentation>
+{
+\usetheme{default}
+\useinnertheme{circles}
+\setbeamerfont{structure}{size=\larger}
+\setbeamerfont{title}{size=\larger[1]}
+\setbeamerfont*{frametitle}{size=\larger[1]}
+\setbeamercolor{frametitle}{fg=black}
+\setbeamercolor{structure}{fg=black}
+\setbeamersize{text margin left=15pt} %0.8cm}
+\setbeamersize{text margin right=10pt} %0.8cm}
+}
+
+\usepackage{natbib}
+\beamertemplatenavigationsymbolsempty
+\newcommand{\attribution}[1]{\vfill\vspace*{-1.2cm}\begin{scriptsize}\smaller\textbf{Source(s):}
+    #1\end{scriptsize}}
+
+
+
+\setbeamertemplate{headline}[my header]
+
+
+% Frame title settings ---------------------------
+
+% POSSIBLY HERE the adjusting space? 
+\setbeamertemplate{frametitle}{
+\begin{centering}
+	\begin{textblock*}{180mm}(-25mm,15mm)
+	    \vspace{-5pt}
+		\textbf{\insertframetitle}%
+		\vfill
+	\end{textblock*}
+\end{centering}
+}
+%\usetheme[progressbar=frametitle]{metropolis}
+
+% Creating my own textblock area for actual content to avoid the content from running into the title:
+%\setbeamertemplate{contentArea}{
+%    \begin{textblock*}
+%    \end{textblock*}
+%}
+
+
+\setbeamertemplate{title page}{
+
+	\tikz[remember picture,overlay] \node[opacity=1,inner sep=0pt] at (current page.center){\includegraphics[width=\paperwidth,height=\paperheight]{imgs/background.png}};
+	\begin{center}
+		\begin{textblock*}{180mm}(-25mm,35mm)
+			\begin{center}
+				\inserttitle		
+			\end{center}
+		\end{textblock*}
+
+		\begin{textblock*}{180mm}(-25mm,50mm)
+			\begin{center}
+				\insertauthor
+			\end{center}
+		\end{textblock*}
+		
+		\begin{textblock*}{80mm}(45mm,87.0mm)
+		{\fontsize{5.5}{6.5}\raggedright \selectfont\textcolor{Salmon}{Vacation Research Scholarships are funded jointly by the Department of Education and Training and the Australian Mathematical Sciences Institute.}\par}
+		\end{textblock*}
+		
+	\end{center}
+    }
+    
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancyfoot[]{\thepage}
+
+\chead{
+\tikz[remember picture,overlay] \node[opacity=1,inner sep=0pt,anchor=north] at (current page.north){\includegraphics[width=\paperwidth]{imgs/VRS-Presentation-header.png}};
+}
+\lfoot{\insertframenumber}
+ 
+\cfoot{
+\tikz[remember picture,overlay] \node[opacity=1,inner sep=0pt,anchor=south] at (current page.south){\includegraphics[width=\paperwidth]{imgs/VRS-Presentation-footer.png}};
+}
+
+
+
+% Table set up--------------------------------
+\usepackage{tabu}
+
+% Use like begin{tableFont} end ...
+\newenvironment{tableFont}{\setmainfont{Overlock}\selectfont}{\par}
+
+
+% Bullet point styles ----------------------------------------
+
+\setbeamertemplate{itemize items}[square]
+%\setbeamertemplate{itemize subitem}[ball]
+
+
+% Font setup ----------------------------------------------
+
+\usefonttheme{professionalfonts} % using non standard fonts for beamer
+\usefonttheme{serif} % default family is serif
+\usepackage{unicode-math} % loads fontspec already
+
+%\setmainfont{Alegreya}
+\setmainfont{Linux Biolinum O}
+
+\setmathfont{TeX Gyre Schola Math}
+
+\setmonofont{Inconsolata}
+
+% Font size
+\newcommand\ContentFontSize{\fontsize{9pt}{9pt}\selectfont}
+
+
+% Change beamer margins for slides: ----------------------------
+
+%\geometry{bmargin=2pt}
+
+
+% Change beamer margins for ITEMIZE: ------------------------------------------
+
+% SOURCE: https://www.guitex.org/home/en/forum/5-tex-e-latex/49939-beamer-margini-frame-a-indentazione-elenco-puntato
+% SOURCE: https://tex.stackexchange.com/a/426588
+
+%\setlength\itemsep{2cm}
+%\usepackage{enumitem}
+%\setitemize{itemsep=3pt}
+
+\setlength{\leftmargini}{0.3cm} % first level item
+\setlength{\leftmarginii}{0.5cm} % second level item
+\setlength{\rightmargin}{0.3cm}
+
+
+
+% Itemize separation between lines ------------------
+
+% Creating environment
+%\newenvironment{itemize*}%
+%  {\begin{itemize}%
+%    \setlength{\itemsep}{7pt}%
+%    \setlength{\parsep}{0pt}%
+%    \setlength{\parskip}{0pt}}% really increases %vspace
+%  {\end{itemize}}
+
+
+\newenvironment{itemizeSpaced}[1]
+  {\begin{itemize}%
+    \ContentFontSize
+    \vspace{#1}
+    %\setlength{\topsep}{#1}%
+    %\setlength{\partopsep}{#1}
+    \setlength{\itemsep}{#1}%
+    \setlength{\parsep}{0pt}%
+    \setlength{\parskip}{0pt}}% really increases vspace
+  {\end{itemize}} 
+
+
+\newenvironment{enumerateSpaced}[1]
+  {\begin{enumerate}%
+    \ContentFontSize
+    \vspace{#1}
+    \setlength{\itemsep}{#1}%
+    \setlength{\parsep}{0pt}%
+    \setlength{\parskip}{0pt}}% really increases vspace
+  {\end{enumerate}}
+
+
+% Hyperlink / URL setup ------------------------------
+
+
+\usepackage{hyperref}
+
+\hypersetup{
+   colorlinks=true,
+   %filecolor=magenta,      
+   %filebordercolor=magenta,
+   urlcolor=blue, % website links
+   urlbordercolor=cyan,
+   linkcolor=MediumVioletRed, % for local linking
+   %linkbordercolor=magenta,
+   %pdftitle={Sharelatex Example},
+   %bookmarks=true,
+   pdfpagemode=FullScreen,
+   pdfborderstyle={/S/U/W 1},
+   runbordercolor=cyan
+}
+
+
+% Cross-Referencing With This Report ---------------------
+
+% SOURCE: https://tex.stackexchange.com/questions/66896/ref-chapter-name-in-latex
+\usepackage{nameref}
+\usepackage{cleveref} % so that 'figure' is included not just its number, NOTE must load this AFTER hyperref
+
+
+% Redefining the cref in beamer because it doesn't work: (must save link explicitly as below)
+% SOURCE: https://tex.stackexchange.com/questions/266080/cleveref-hyperlink-not-working-in-beamer
+
+% Step 1: Save original command 'cref' under new name, like oldcref
+\let\oldcref\cref 
+% Step 2: redefine the \cref and explicitly add the hyperlink
+\renewcommand{\cref}[1]{\hyperlink{#1}{\oldcref{#1}}} 
+
+
+% Images ------------------------------------
+
+%\usepackage{graphics}
+%\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+
+
+\setbeamertemplate{caption}[numbered]
+\captionsetup{font=scriptsize,labelfont=scriptsize}
+
+% Wrapping figures and floating the text so they don't separate ----
+% NOTE: better just to use columns
+
+%\usepackage{float}
+%\usepackage{wrapfig}
+%\usepackage{adjustbox}
+%%\setlength{\intextsep}{0mm}
+%%\floatstyle{ruled}
+%\newfloat{program}{!th}{lop}
+%\floatname{program}{Program}
+
+
+
+
+
+% Coloring shading --------------------------
+
+% Declaring some base colors to change:
+\colorlet{BaseRed}{LightSalmon!50} % to lighten by 50
+\colorlet{BaseGreen}{LightGreen!50}
+\colorlet{BaseBlue}{Aqua!15}
+\colorlet{DefColor}{LightGoldenrod!50}
+
+\newcommand{\lighten}[3]{% Reference Color, Percentage, New Color Name
+    \colorlet{#3}{#1!#2!white}
+}
+
+\newcommand{\darken}[3]{% Reference Color, Percentage, New Color Name
+    \colorlet{#3}{#1!#2!black}
+}
+
+
+% Now LightRed and DarkRed are commands
+\lighten{BaseRed}{50}{LightRed}
+\darken{BaseRed}{50}{DarkRed}
+
+% Now LightGreen and DarkGreen are commands
+\lighten{BaseGreen}{50}{LightGreen}
+\darken{BaseGreen}{50}{DarkGreen}
+
+\lighten{BaseBlue}{50}{LightBlue}
+\darken{BaseBlue}{50}{DarkBlue}
+
+\lighten{DefColor}{50}{LightGold}
+\darken{DefColor}{50}{DarkGold}
+
+
+
+
+% Block environment colors -----------------
+
+% SOURCE: https://tex.stackexchange.com/questions/33231/how-to-change-the-color-of-a-block-within-a-custom-beamer-sty-theme-file
+
+%\newenvironment{exampleBlock}[1]{%
+%  \setbeamercolor{block title}{bg=BaseGreen, fg=DarkGreen}
+%  \setbeamercolor{block body}{bg=LightGreen}
+%  \begin{block}{#1}}{\end{block}}
+ 
+\newenvironment{exampleBlock}[1]{%
+  \setbeamercolor{block title}{bg=BaseBlue, fg=DarkBlue}
+  \setbeamercolor{block body}{bg=LightBlue}
+  \begin{block}{\small #1}}{\end{block}} 
+  
+  
+\newenvironment{alertBlock}[1]{%
+  \setbeamercolor{block title}{bg=BaseRed, fg=DarkRed}
+  \setbeamercolor{block body}{bg=LightRed}
+  \begin{block}{\small #1}}{\end{block}}  
+  
+\setbeamercolor{alerted text}{fg=FireBrick}
+  
+
+\newenvironment{definitionBlock}[1]{%
+  \setbeamercolor{block title}{bg=DefColor, fg=DarkGold}
+  \setbeamercolor{block body}{bg=LightGold}
+  \begin{block}{\small #1}}{\end{block}} 
+
+
+
+% Enlarge math symbols -------------------
+
+
+% Brings \mathlarger command for symbols like \Rightarrow
+\usepackage{relsize}
+
+
+% Indenting / addmargin ----------------------------
+
+\usepackage{scrextend} % For indenting
+
+% Change bullet shapes -------------------
+
+%\usepackage{enumitem}
+
+% Creates arrow as a bullet item (used in transformer-xl slide)
+\newcommand{\arrowitem}{\item[$\Rightarrow$]}
+\newcommand{\largearrowitem}{\item[$\mathlarger{\mathlarger{\Rightarrow}}$]}
+\newcommand{\pinkbox}{\item[\textcolor{magenta}{$\blacksquare$}]}
+
+
+
+
+% Paragraph / Indendation ---------------------
+
+% HELP: doesn't work!
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlength{\parsep}{5pt}
+
+
+
+% Footnote raise higher ----------------------------
+
+
+\addtobeamertemplate{footnote}{\color{DimGrey} \linespread{0.1}\scriptsize\ }{\vspace{30pt}}
+
+%\usepackage{hanging}
+
+%\setbeamertemplate{footnote}{%
+%  \hangpara{0.1em}{1}%
+%   \makebox[0.1em][l]{\scriptsize\insertfootnotemark}\scriptsize\insertfootnotetext\par%
+%}
