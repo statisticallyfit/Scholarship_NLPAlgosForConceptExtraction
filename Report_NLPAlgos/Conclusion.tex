@@ -1,14 +1,10 @@
-\section{Discussion, Conclusion, and Future Work}\label{sec:ConcludeAndFuture}
+\section{Conclusion, and Future Work}\label{sec:ConcludeAndFuture}
 
-\begin{itemize}
-\item summarize what was written
--> machine translation (MT)
-Did not expect this to be directly useful to my long term purpose of concept extraction (ml) but a good source of implementations
--> .... summarize
 
-\item indicate future work directions
--> bayes polysemy
--> different representations: knowledge graph embeddings
--> model fine-tuning, transfer learning, domain adaptation for easier use.
--> more research into concept embeddings and key phrase extraction. 
-\end{itemize}
+In the future, my aim is to apply NLP algorithms in the real world by doing: domain adaptation, transfer learning, model fine-tuning to avoid costs of training models from scratch with huge data. \emph{Transfer learning} or domain adaptation describes how a model created for one task is reused for a different task. Pre-trained models like BERT are used as starting points for downstream tasks that require much time and resources in order to train (Brownlee, 2017). This will enable me to research further into \textbf{concept embeddings} and \nameref{nlptask:keyphraseextraction}. 
+
+Secondly, I would like to explore Bayesian approaches to NLP. Brazinkas et al. (2018) use a \textbf{Bayesian} Skip-Gram model to encode words as probability densities rather than simple vectors like in \nameref{sec:Word2Vec}, enabling it to capture \hyperref[sec:Polysemy]{polysemy}, and thus strengthening it on tasks like \nameref{nlptask:lexicalsubstitution} and \nameref{nlptask:wordsensedisambiguatioNWSD}. As an example insight from the paper: ``when `kiwi' appears in a context suggesting the ‘bird’ sense, the posterior [of the word `kiwi'] becomes more ‘peaky’ and moves towards the representation of word ‘bird’ " (Brazinkas et al., 2018). 
+
+
+
+Thirdly, I want to study and apply multi-task and continual learning from ERNIE 2.0 model, which performs better than even top models like \nameref{sec:BERT}, \nameref{sec:XLNet}, and \nameref{sec:ERNIE_1}. I especially want to implement all these models using a domain-specific language for NLP to separate technical details from actual neural network logic, to promote modularity and model understanding. 

@@ -10,7 +10,7 @@
 
 % Margin size -----------------------------------
 % \geometry{tmargin=3.5cm,bmargin=3cm,lmargin=2cm,rmargin=2cm}
-\geometry{tmargin=3.5cm,bmargin=2.5cm,lmargin=1cm,rmargin=1cm}
+\geometry{tmargin=2.7cm,bmargin=1.7cm,lmargin=0.6cm,rmargin=0.6cm}
 
 
 
@@ -32,14 +32,29 @@
 % Images --------------------------------------
 % Ana: adding graphics package for images 
 \usepackage{graphics}
-\usepackage{graphicx}
+\usepackage{graphicx}  %necessary for scalebox for equations
 \graphicspath{ {./imgs/} }
 % Ana: setting up for text to be on side of the image, on the right
 
-% For side-by-side figures with independent caption
+% For side-by-side figures with independent caption:
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{setspace}
 % graphicx
+
+\captionsetup{font={stretch=0.01, color=Grey, footnotesize},labelfont={color=Black, footnotesize, bf}}
+
+
+
+% Table of contents -------------------------------
+
+% Spacing for table of contents
+\usepackage{tocbasic}
+\DeclareTOCStyleEntry[
+  beforeskip=.2em plus 1pt,% default is 1em plus 1pt
+  pagenumberformat=\textbf
+]{tocline}{section}
+
 
 % ---------------------------------------
 \usepackage{float}
@@ -70,16 +85,6 @@
 }
 
 
-%Font setting
-%Update two lines below to change the font
-%More details: https://en.wikibooks.org/wiki/LaTeX/Fonts
-%\renewcommand{\familydefault}{\sfdefault}
-%\renewcommand*\rmdefault{phv}
-
-%Important: the document needs to be compiled with xelatex/lualatex if two lines below are uncommented
-%\usepackage{fontspec}
-%\setmainfont{Arial}
-
 
 % Font Setup  ---------------------------------------------------------
 \usepackage{unicode-math} % load 'fontspec' automatically
@@ -87,6 +92,7 @@
 %\usepackage[T1]{fontenc} ?????
 
 
+% Main font
 %\setmainfont{Junction}
 %\setmainfont{Coelacanth}
 %\setmainfont{TeX Gyre PagellaX}
@@ -102,42 +108,26 @@
 %\setmainfont{Libertinus Sans} 
 %\setmainfont{Linux Biolinum O}
 
+
+% Math font
 %\setmathfont{XITS Math}
 \setmathfont{TeX Gyre Schola Math}
 
 % Line spacing ----------------
-%\renewcommand{\baselinestretch}{0.5}
-
-% My line spacing for the title page: 
-%\linespread{1.0}  % was 1.5
-\linespread{0.9}
-
-% Section spacing (spaces between sections and text) ------
-\usepackage[compact]{titlesec}
-
-\titlespacing{\section}{0pt}{10pt}{2pt}
-\titlespacing{\subsection}{0pt}{10pt}{2pt}
-\titlespacing{\subsubsection}{0pt}{10pt}{2pt}
-
-%\titlespacing{\section}{0pt}{*0}{*0}
-%\titlespacing{\subsection}{0pt}{*0}{*0}
-%\titlespacing{\subsubsection}{0pt}{*0}{*0}
+\linespread{0.6} % was 1.5
 
 
+% Font size
+\newcommand\ContentFontSize{\fontsize{10.5pt}{10.5pt}\selectfont}
+
+\newcommand\ContentFontSizeMedium{\fontsize{11pt}{11pt}\selectfont}
+
+\newcommand\CodeFontSizeSmall{\fontsize{9pt}{9pt}\selectfont}
+
+
+%\newcommand\ContentFontSizeBigger{\fontsize{11.5pt}{11.5pt}\selectfont}
 
 % Setting up local font
-
-% ONE WAY: 
-
-% Use like {\tablefont ...}
-%\newcommand*{\tableFont}{\fontfamily{Play}\selectfont}
-% WARNING: don't know why but this doesn't come out as the actual PLAY font
-
-
-% ---------------
-
-% ANOTHER WAY: 
-
 
 % Use this for \begin{tableFont} ... \end{tableFont}
 \newenvironment{tableFont}{\setmainfont{Overlock}\selectfont}{\par}
@@ -145,55 +135,145 @@
 %\DeclareTextFontCommand{\tableFont}{\tablefont}
 
 
+
+% Section font size 
+
+\usepackage{sectsty}
+\sectionfont{\fontsize{16}{16}\selectfont}
+\subsectionfont{\fontsize{12.5}{12.5}\selectfont}
+\subsubsectionfont{\fontsize{11}{11}\selectfont}
+
+%\usepackage{titlesec}
+%\titleformat*{\section}{\Large\selectfont}
+%\titleformat*{\subsection}{\large\selectfont}
+%\titleformat*{\subsubsection}{\normalsize\selectfont}
+
+
+
+
+% Indenting / addmargin ----------------------------
+
+%\usepackage{scrextend} % For addmargin environment
+
+\usepackage{changepage}
+
+
+
+% Coloring shading --------------------------
+
+% SOURCE: https://tex.stackexchange.com/questions/48662/tikz-or-xcolor-lighten-color
+
+
+% Declaring some base colors to change:
+\colorlet{BaseRed}{LightSalmon!50} % to lighten by 50
+\colorlet{BaseGreen}{LightGreen!50}
+\colorlet{BaseBlue}{Aqua!15}
+
+\definecolor{originalmannibg}{HTML}{f2f2ff}
+\colorlet{BasePurple}{originalmannibg!90}
+
+\colorlet{DefColor}{LightGoldenrod!50}
+
+\newcommand{\lighten}[3]{% Reference Color, Percentage, New Color Name
+    \colorlet{#3}{#1!#2!white}
+}
+
+\newcommand{\darken}[3]{% Reference Color, Percentage, New Color Name
+    \colorlet{#3}{#1!#2!black}
+}
+
+
+% Now LightRed and DarkRed are commands
+\lighten{BaseRed}{50}{LightRed}
+\darken{BaseRed}{50}{DarkRed}
+
+% Now LightGreen and DarkGreen are commands
+\lighten{BaseGreen}{50}{LightGreen}
+\darken{BaseGreen}{50}{DarkGreen}
+
+\lighten{BaseBlue}{50}{LightBlue}
+\darken{BaseBlue}{50}{DarkBlue}
+
+\lighten{DefColor}{50}{LightGold}
+\darken{DefColor}{50}{DarkGold}
+
+\lighten{BasePurple}{50}{mannibg}
+
+
+
+
+
+
 % Code setup -----------------------------------------------------
-
-
 \usepackage{minted}
 \usepackage{verbatim}  % has commenting
 
 
 
 \usemintedstyle{manni}
-\setmonofont{Inconsolata} % setting code font
-%\setmonofont{Fira Mono}
+
+%\setmonofont{Inconsolata} % setting code font
+\setmonofont{Fira Mono}
 %\setmonofont{DejaVu Sans Mono}
 %\setmonofont{Droid Sans Mono}
 
 
 % Background for manni theme: 
-\definecolor{mannibg}{HTML}{f2f2ff}
+%\definecolor{mannibg}{HTML}{LightPurple}
 
 % For larger line numbers: 
-\renewcommand{\theFancyVerbLine}{
-  \sffamily\textcolor[rgb]{0.5,0.5,0.5}{\scriptsize\arabic{FancyVerbLine}}}
+%\renewcommand{\theFancyVerbLine}{
+%  \sffamily\textcolor[rgb]{0.5,0.5,0.5}{\scriptsize\arabic{FancyVerbLine}}}
 
-\newenvironment{codeEnv}[2][]
- {\VerbatimEnvironment
+
+% General code environment, used like: \begin{code}{python} .... \end{code}
+% NOTE: this is how to nest two environments together: 
+\newenvironment{code}[2][]
+ {\vspace{-3pt}%
+ \VerbatimEnvironment
+  \begin{adjustwidth}{30pt}{30pt}
   \begin{minted}[
-    linenos, breaklines, mathescape,
+    fontsize=\CodeFontSizeSmall,
+    breaklines, mathescape,
     style=manni, bgcolor=mannibg,  #1]{#2}}
- {\end{minted}}
+ {\end{minted}\end{adjustwidth} 
+     \vspace{-10pt}
+ }
+ 
+ 
+% Python code environment, used like \begin{pythonCode} ... \end{pythonCode}
+\newenvironment{pythonCode}
+ {\vspace{-3pt}%
+ \VerbatimEnvironment
+  \begin{adjustwidth}{30pt}{30pt}
+  \begin{minted}[
+    fontsize=\CodeFontSizeSmall,
+    breaklines, mathescape,
+    style=manni, bgcolor=mannibg]{python}}
+ {\end{minted}\end{adjustwidth} 
+     \vspace{-10pt}
+ }
 
-% PROBLEM: why is parskip removed after code listing here?
 
 
+% General code output environment
+\newenvironment{outputCode}
+ {\VerbatimEnvironment
+  \begin{adjustwidth}{30pt}{30pt}
+  \begin{minted}[
+    fontsize=\CodeFontSizeSmall,
+    breaklines]{text}}
+ {\end{minted}\end{adjustwidth}}
 
 
+% Creating inline code font (equivalent to backticks in jupyter notebooks)
+
+\newmintinline{python}{python3, fontsize=\CodeFontSizeSmall, bgcolor=mannibg}
+
+%\newenvironment{mintInline}[1][]{\mintinline{latex}{#1}}{}
+%\DeclareTextFontCommand{\mint}{\mintInline}
 
 
-%\setlength{\parindent}{0pt}
-%\setlength{\OuterFrameSep}{0pt}
-
-% For larger line numbers: 
-%\renewcommand\theFancyVerbLine{\large\arabic{FancyVerbLine}}
-
-% Create manni style background color
-%\definecolor{mannibg}{HTML}{f0f3f3}
-
-%\newminted[pythonCode]{python}{linenos=true, texcl=true, bgcolor=mannibg}
-
-%\newmintedfile[pythonCodeFile]{python}{style=manni, bgcolor=mannibg}
-% TODO: how to do left margin in the code style? 
 
 
 
@@ -206,7 +286,8 @@
     %filebordercolor=magenta,
     urlcolor=blue, % website links
     urlbordercolor=cyan,
-    linkcolor=MediumVioletRed, % for local linking
+    % FireBrick, DodgerBlue, MediumVioletRed, ... SteelBlue
+    linkcolor = MediumVioletRed, % for local linking
     %linkbordercolor=magenta,
     %pdftitle={Sharelatex Example},
     %bookmarks=true,
@@ -227,20 +308,6 @@
 
 
 
-% Coloring Automation for lightening colors: -------------------------------
-% SOURCE: https://tex.stackexchange.com/questions/48662/tikz-or-xcolor-lighten-color
-\colorlet{MyColorOne}{blue!50}
-
-\newcommand{\lightercolor}[3]{% Reference Color, Percentage, New Color Name
-    \colorlet{#3}{#1!#2!white}
-}
-\newcommand{\darkercolor}[3]{% Reference Color, Percentage, New Color Name
-    \colorlet{#3}{#1!#2!black}
-}
-\lightercolor{MyColorOne}{50}{MyLavender}
-\darkercolor{MyColorOne}{50}{MyColorOneDark}
-
-
 
 
 % Paragraph / Indendation ---------------------
@@ -248,21 +315,63 @@
 \setlength{\parskip}{5pt}
 
 
+
+
+% Section spacing (spaces between sections and text) ------
+\usepackage[compact]{titlesec}
+
+
+% RULE: \titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
+
+% NOTE: use the \titlespacing* to put indent after first paragraphs (style)
+\titlespacing{\section}{0pt}{4pt}{0pt}
+\titlespacing{\subsection}{0pt}{4pt}{0pt}
+\titlespacing{\subsubsection}{0pt}{4pt}{0pt}
+
+
+% SOURCE: https://tex.stackexchange.com/questions/53338/reducing-spacing-after-headings
+
+
+
+
 % Spacing lines in lists -------------------
 
 \newenvironment{itemizeSpaced}[1]
-  {\begin{itemize}%
-    %\setlength{\topsep}{15pt}%
+  {\vspace{-2pt}
+  \begin{itemize}%
+    \ContentFontSize
+    \vspace{-#1}
     \setlength{\itemsep}{#1}%
     \setlength{\parsep}{0pt}%
     \setlength{\parskip}{0pt}}% really increases vspace
   {\end{itemize}}
 
+
+
 \newenvironment{enumerateSpaced}[1]
   {\begin{enumerate}%
+    \ContentFontSize
+    \vspace{-#1}% eliminate space before
     \setlength{\itemsep}{#1}%
     \setlength{\parsep}{0pt}%
-    \setlength{\parskip}{0pt}}% really increases vspace
+    \setlength{\parskip}{0pt}% really increases vspace
+    \vspace{-#1}}% eliminate space after
   {\end{enumerate}}
+
+
+%\newenvironment{itemizeSpaced}[1]
+%  {\begin{itemize}%
+%    %\setlength{\topsep}{15pt}%
+%    \setlength{\itemsep}{#1}%
+%    \setlength{\parsep}{0pt}%
+%    \setlength{\parskip}{0pt}}% really increases vspace
+%  {\end{itemize}}
+
+%\newenvironment{enumerateSpaced}[1]
+%  {\begin{enumerate}%
+%    \setlength{\itemsep}{#1}%
+%    \setlength{\parsep}{0pt}%
+%    \setlength{\parskip}{0pt}}% really increases vspace
+%  {\end{enumerate}}
 
 

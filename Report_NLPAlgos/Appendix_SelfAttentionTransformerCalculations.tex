@@ -1,0 +1,88 @@
+\section{Appendix: Self Attention Calculations in Transformer} \label{app:TransformerSelfAttnCalc}
+
+Remember the following example sentence from the \nameref{sec:Transformer} section: \textit{``The animal didn't cross the road because it was too tired."}
+
+Each word has an associated \textbf{query, key, value} vector which are created by multiplying the words embeddings with parameter weight matrices $W^Q, W^K, W^V$ that are associated with the query, key, and value matrices, respectively. For the example, let input matrix be $X = \{\overrightarrow{x_1}, \overrightarrow{x_2}, ..., \overrightarrow{x_n}\}$, where vector $\overrightarrow{x_i}$ corresponds to word $\overrightarrow{w_i}$, and there are $n$ words. Then the input word vectors are: 
+$\overrightarrow{x_1} = \text{"The"}$, 
+$\overrightarrow{x_2} = \text{"animal"}$, 
+$\overrightarrow{x_3} = \text{"didn't"}$, 
+$\overrightarrow{x_4} = \text{"cross"}$, 
+$\overrightarrow{x_5} = \text{"the"}$, 
+$\overrightarrow{x_6} = \text{"road"}$, 
+$\overrightarrow{x_7} = \text{because"}$, 
+$\overrightarrow{x_8} = \text{"it"}$, 
+$\overrightarrow{x_9} = \text{"was"}$, 
+$\overrightarrow{x_{10}} = \text{"too"}$, 
+$\overrightarrow{x_{11}} = \text{"tired"}$, 
+$\overrightarrow{x_{12}}$ = "."
+and the corresponding word embedding vectors are denoted $\Big\{ \overrightarrow{w_1}, \overrightarrow{w_2}, ..., \overrightarrow{w_n} \Big\}$ and the \textbf{query, key, value} matrices are denoted $Q = \Big\{\overrightarrow{q_1}, \overrightarrow{q_2}, ..., \overrightarrow{q_n} \Big\}$, $K = \Big\{\overrightarrow{k_1}, \overrightarrow{k_2}, ..., \overrightarrow{k_n} \Big\}$, $V = \Big\{\overrightarrow{v_1}, \overrightarrow{v_2}, ..., \overrightarrow{v_n} \Big\}$ respectively.
+
+
+\subsubsection{Self-Attention: Vector Calculation}
+
+Using notation from Vaswani et al. (2017) and Alammar (2018b), 
+
+\begin{enumerateSpaced}{2pt}
+    \item \textbf{Create Query, Key, Value Vectors} from each of the Encoder's input word embeddings $\overrightarrow{w_i}$ by multiplying them by appropriate rows in the three parameter matrices. 
+
+    \item \textbf{Calculate a Score}: to determine how much \emph{focus to place on other parts of the input sentence} while encoding a word at a certain position.  The score is calculated by taking the dot product of the \textbf{query} and \textbf{key} vectors of the word being scored. Thus for word $\overrightarrow{w_i}$, the scores are: 
+    $$
+    \texttt{scores}_{\Large w_i} = \bigg\{
+    \overrightarrow{q_i} \cdot \overrightarrow{k_1},
+    \overrightarrow{q_i} \cdot \overrightarrow{k_2},
+    ...,
+    \overrightarrow{q_i} \cdot \overrightarrow{k_n} \bigg\}
+    $$
+
+    \item \textbf{Scale The Score}: The scores are scaled using $d_k$, the dimension of the key vector. From Vaswani et al. (2017), ``for large values of $d_k$, the dot products grow large in  magnitude, forcing the \hyperref[cnc:softmaxLayer]{softmax function} into regions where it has extremely small gradients. To counteract this effect, we scale the dot products by $\frac {1} {\sqrt{d_k}}$." Thus the scores for $\overrightarrow{w_i}$ are:
+    $$
+    \texttt{scores}_{\overrightarrow{w_i}} = \Bigg\{
+    \frac {\overrightarrow{q_i} \cdot \overrightarrow{k_1}} {\sqrt{d_k}},
+    \frac {\overrightarrow{q_i} \cdot \overrightarrow{k_2}} {\sqrt{d_k}},
+    ...,
+    \frac{\overrightarrow{q_i} \cdot \overrightarrow{k_n}} {\sqrt{d_k}} \Bigg\}
+    $$
+    
+    \item \textbf{Apply Softmax}: The \hyperref[cnc:softmaxLayer]{softmax function} normalizes the scores into probabilities. 
+    $$
+    \texttt{scores}_{\overrightarrow{w_i}} = \texttt{softmax} \Bigg( \Bigg\{
+    \frac {\overrightarrow{q_i} \cdot \overrightarrow{k_1}} {\sqrt{d_k}},
+    \frac {\overrightarrow{q_i} \cdot \overrightarrow{k_2}} {\sqrt{d_k}},
+    ...,
+    \frac{\overrightarrow{q_i} \cdot \overrightarrow{k_n}} {\sqrt{d_k}} \Bigg\} \Bigg)
+    $$
+
+    \item \textbf{Compute the Weights}: The weighted values for word embedding $\overrightarrow{w_i}$ are calculated by multiplying each value vector in matrix $V$ by the \hyperref[cnc:softmaxLayer]{softmax} scores. Intuitively, this cements the values of words to focus on while drowning out irrelevant words. 
+    $$
+    \texttt{weights}_{\overrightarrow{w_i}} = \texttt{scores}_{\overrightarrow{w_i}} * (\overrightarrow{v_1}, ..., \overrightarrow{v_n})
+    $$
+
+    \item \textbf{Compute Output Vector}: The weight vector's cells are summed to produce the \textbf{output vector} of the self-attention layer for word embedding $\overrightarrow{w_i}$: 
+    $$
+    \overrightarrow{\texttt{output}_{w_i}} = \texttt{softmax} \Bigg(
+    \frac {\overrightarrow{q_i} \cdot \overrightarrow{k_1}} {\sqrt{d_k}} \Bigg) \cdot \overrightarrow{v_1} +
+    \texttt{softmax} \Bigg(\frac {\overrightarrow{q_i} \cdot \overrightarrow{k_1}} {\sqrt{d_k}} \Bigg) \cdot \overrightarrow{v_2} + ... +
+    \texttt{softmax} \Bigg(\frac {\overrightarrow{q_i} \cdot \overrightarrow{k_1}} {\sqrt{d_k}} \Bigg) \cdot \overrightarrow{v_n}
+    $$
+\end{enumerateSpaced} 
+
+
+\subsection{Self-Attention: Matrix Calculation}
+
+Using notation from Vaswani et al. (2017) and Alammar (2018b), 
+
+\begin{enumerateSpaced}{2pt}
+    \item \textbf{Calculate Query, Key, Value Matrices}: The word embeddings are packed into the rows of input matrix $X$ and this is multiplied by each of the trained parameter matrices $W^Q$, $W^K$, $W^V$ to produce the $Q$, $K$, $V$ matrices:
+    $$
+    \begin{array}{ll}
+    Q = X \cdot W^Q \\
+    K = X \cdot W^K \\
+    V = X \cdot W^V 
+    \end{array}
+    $$
+    
+    \item \textbf{Calculate Self Attention}: Steps 2 through 6 of the vector calculation for self attention can be condensed into a single matrix step where $Q = \Big\{\overrightarrow{q_1}, \overrightarrow{q_2}, ..., \overrightarrow{q_n} \Big\}$, $K = \Big\{\overrightarrow{k_1}, \overrightarrow{k_2}, ..., \overrightarrow{k_n} \Big\}$, $V = \Big\{\overrightarrow{v_1}, \overrightarrow{v_2}, ..., \overrightarrow{v_n} \Big\}$: 
+    $$
+    \texttt{Attention}(Q, K, V) = \texttt{softmax} \Bigg(\frac {QK^T} {\sqrt{d_k}} \Bigg) \cdot V
+    $$
+\end{enumerateSpaced}

@@ -47,24 +47,19 @@ and the Australian Mathematical Sciences Institute.
 
 
 
+
+% Change content font size (not sections)
+\ContentFontSize
+
 % Report Start
-\input{Abstract.tex} % done
+\input{Abstract.tex} % TODO abstract
 
-% Set smaller line spacing for table of contents
-%{\linespread{0.7} \tableofcontents}
-%\renewcommand{\baselinestretch}{0.75}\normalsize
-\tableofcontents
-% Setting line spacing after TBC:
-%\renewcommand{\baselinestretch}{0..9}\normalsize
-
-%\clearpage 
+\input{TBC.tex}
 
 \input{Introduction.tex} % done
+
 \input{WordEmbeddings.tex}% done
-\input{LanguageModels.tex}% done
 \input{Word2Vec.tex}% done
-\input{GloVe.tex}% done
-\input{Seq2Seq.tex}% done
 \input{Transformer.tex}% done
 \input{ELMo.tex}% done
 \input{BERT.tex}% done
@@ -77,17 +72,30 @@ and the Australian Mathematical Sciences Institute.
 
 \appendix
 \clearpage 
-\input{Appendix_NLPTasks.tex}
-\clearpage
-\input{Appendix_Backprop.tex}
+\input{Appendix_LanguageModels.tex}% done
 \clearpage
 \input{Appendix_RNN_LSTM.tex}
+\clearpage
+\input{GloVe.tex}
+\clearpage 
+\input{Seq2Seq.tex}% done
+\clearpage
+\input{Appendix_SelfAttentionTransformerCalculations}
+\clearpage
+\input{Appendix_NLPTasks.tex}
+\clearpage
+\input{Appendix_Code_LSTMPosTagger.tex}
+
+
+%\clearpage
+%\input{Appendix_Backprop.tex}
+
 %\clearpage
 %\input{Appendix_Code_SkipGramModel.tex}
 %\clearpage
 %\input{Appendix_Code_CBOWModel.tex}
-\clearpage
-\input{Appendix_Code_SeqToSeqWithAttention.tex}
+%\clearpage
+%\input{Appendix_Code_SeqToSeqWithAttention.tex}
 
 
 %\clearpage

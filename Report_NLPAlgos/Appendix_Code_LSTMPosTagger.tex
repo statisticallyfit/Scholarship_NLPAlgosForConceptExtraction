@@ -1,0 +1,307 @@
+\section{Appendix: POS-Tagging with LSTM in AllenNLP}\label{app:LSTMPOSTagger}
+
+
+\subsection{The Problem}
+
+Given a sentence like \textit{``The dog ate the apple"} we want to predict part-of-speech tags for each word, like [\texttt{DET}, \texttt{NN}, \texttt{V}, \texttt{DET}, \texttt{NN}]. This is the \hyperref[app:Appendix_NLPTasks]{nlp task} called \nameref{nlptask:postagging}. This experiment will do this using the typed \href{https://allennlp.org/}{AllenNLP} framework, which is built on top of \href{https://pytorch.org/tutorials/}{PyTorch}. 
+
+The basic workflow of what we will do is: 
+
+\begin{enumerateSpaced}{3pt}
+
+\vspace{5pt}
+
+    \item Embed each word in a low-dimensional vector space.
+    
+    \item Pass each numericalized word as vector through a \nameref{sec:LSTM} to get a sequence of encodings.
+    
+    \item Use a feedforward layer in the \hyperref[sec:LSTM]{LSTM} to transform the encodings into a sequence of logits, corresponding to the possible \hyperref[nlptask:postagging]{part-of-speech tags}.
+\end{enumerateSpaced}
+
+
+\subsection{Prepare Inputs for the Model}
+
+
+\begin{pythonCode}
+
+from typing import Iterator, List, Dict
+
+import torch
+import torch.tensor as Tensor
+import torch.optim as optim
+import numpy as np
+
+\end{pythonCode}
+
+
+Each training example is represented in AllenNLP as an \pythoninline{Instance} containing \pythoninline{Field}s of various types. Each example (\pythoninline{Instance}) will be composed of two things: a \pythoninline{TextField} containing the sentence, and a \pythoninline{SequenceLabelField} containing the corresponding part of speech tags.
+
+
+\begin{pythonCode}
+
+from allennlp.data import Instance
+from allennlp.data.fields import TextField, SequenceLabelField
+
+\end{pythonCode}
+
+We must implement two classes, one of which is the \pythoninline{DatasetReader}, which contains the logic for reading a file of data and producing a stream of \pythoninline{Instance}s.
+
+\begin{pythonCode}
+from allennlp.data.dataset_readers import DatasetReader
+
+\end{pythonCode}
+
+
+Frequently we need to load datasets or models from URLs. The \pythoninline{cached_path}  helper downloads such files, then caches them locally, and then returns the local path. It also accepts local file paths (which it just returns as is).
+
+\begin{pythonCode}
+
+from allennlp.common.file_utils import cached_path
+\end{pythonCode}
+
+There are various ways to represent a word as one or more indices. For example, there might be a vocabulary of unique words where each word is assigned a corresponding id. Or there might be one id per character in the word and so each word is represented as a sequence of ids. AllenNLP uses a \pythoninline{TokenIndexer} abstraction for this representation. Thus, the \pythoninline{TokenIndexer} abstraction represents a rule for converting a token (word) into indices.
+
+
+\begin{pythonCode}
+from allennlp.data.token_indexers import TokenIndexer, SingleIdTokenIndexer
+from allennlp.data.tokenizers import Token
+\end{pythonCode}
+
+While the \pythoninline{TokenIndexer} represents a rule for converting a token into indices, a \pythoninline{Vocabulary} is a dictionary of corresponding mappings from strings to integers. For instance, say the \pythoninline{TokenIndexer} specifies that a token should be represented as a sequence of character ids. This implies the \pythoninline{Vocabulary} contains the dictionary mapping \pythoninline{{character -> id}}. 
+
+For now, we use a \pythoninline{SingleIdTokenIndexer} that assigns each token a unique id, and so the \pythoninline{Vocabulary} will just contain a mapping \pythoninline{{token -> id}} as well as the reverse mapping.
+
+\begin{pythonCode}
+from allennlp.data.vocabulary import Vocabulary
+\end{pythonCode}
+
+Along with \pythoninline{DatasetReader} the other class we would typically need to implement in AllenNLP is \pythoninline{Model}, which is a PyTorch \pythoninline{Module} that takes tensor inputs and produces a \pythoninline{dict} of tensor outputs and the training \pythoninline{loss} to be optimized.
+
+
+\begin{pythonCode}
+from allennlp.models import Model
+\end{pythonCode}
+
+The \hyperref[nlptask:postagging]{POS tagger model} we are building consists of an \hyperref[sec:WordEmbeddings]{embedding} layer, \hyperref[sec:LSTM]{LSTM} model, and \hyperref[sec:NeuralLM]{feed forward layer} in this order. AllenNLP includes abstractions for all of these components (imported as below) that handle padding and batching and various other utilities. 
+
+
+\begin{pythonCode}
+from allennlp.modules.text_field_embedders import TextFieldEmbedder, BasicTextFieldEmbedder
+from allennlp.modules.token_embedders import Embedding
+from allennlp.modules.seq2seq_encoders import Seq2SeqEncoder, PytorchSeq2SeqWrapper
+from allennlp.nn.util import get_text_field_mask, sequence_cross_entropy_with_logits
+\end{pythonCode}
+
+\pythoninline{CategoricalAccuracy} is for tracking accuracy on training and validation datasets.
+
+
+\begin{pythonCode}
+from allennlp.training.metrics import CategoricalAccuracy
+\end{pythonCode}
+
+In our training, we will need a \pythoninline{DataIterator} that can intelligently batch the data.
+
+
+\begin{pythonCode}
+from allennlp.data.iterators import BucketIterator
+\end{pythonCode}
+
+The \pythoninline{Trainer} trains the model.
+
+\begin{pythonCode}
+from allennlp.training.trainer import Trainer
+\end{pythonCode}
+
+The \pythoninline{SentenceTaggerPredictor} is for making predictions on new inputs.
+
+\begin{pythonCode}
+from allennlp.predictors import SentenceTaggerPredictor
+\end{pythonCode}
+
+Now we can set the seed for reproducibility:
+
+\begin{pythonCode}
+torch.manual_seed(1)
+\end{pythonCode}
+
+
+\begin{outputCode}
+<torch._C.Generator at 0x7f0e8481ed10>
+\end{outputCode}
+
+
+
+% -------------------------------------------
+
+\subsection*{Step 1: Create the \pythoninline{DatasetReader} for \hyperref[nlptask:postagging]{POS Tagging}}
+
+
+
+The first step is to create the \pythoninline{DatasetReader} for our particular \hyperref[nlptask:postagging]{POS tagging task}. The following methods are essential to this class: 
+
+\begin{itemizeSpaced}{3pt}
+    \item \pythoninline{__init__()}: the only parameter \pythoninline{DatasetReader} needs is a dict of \pythoninline{TokenIndexer}s that specify how to convert tokens into indices. By default we generate a single index for each token (which we also call ``tokens") that is a unique id for each distinct token. This is just the standard ``word to index" mapping used in most NLP tasks.
+    
+    \item \pythoninline{text_to_instance()}: the \pythoninline{DatasetReader.text_to_instance} takes the inputs corresponding to a training example (in this case, the tokens of the sentence and corresponding part-of-speech tags), and instantiates the corresponding \pythoninline{Field}s: a \pythoninline{TextField} for the sentence, and a \pythoninline{SequenceLabelField} for its tags. Then \pythoninline{text_to_instance()} returns the \pythoninline{Instance} containing those fields. The tags are optional since we should have the option of creating \pythoninline{Instance}s from unlabeled data to make predictions on them.
+    
+    \item \pythoninline{_read()}: Takes a filename and produces a stream of \pythoninline{Instance}s, by harnessing the \pythoninline{text_to_instance()} method.
+    
+\end{itemizeSpaced}
+
+
+
+
+
+\begin{pythonCode}
+
+class PosDatasetReader(DatasetReader):
+
+    def __init__(self, tokenIndexers: Dict[str, TokenIndexer] = None) -> None:
+        super().__init__(lazy = False)
+
+        self.tokenIndexers = tokenIndexers or {"tokens": SingleIdTokenIndexer()}
+
+
+    def text_to_instance(self, tokens: List[Token], tags: List[str] = None) -> Instance:
+
+        sentenceField = TextField(tokens = tokens,
+                                  token_indexers= self.tokenIndexers)
+
+        fields = {"sentence": sentenceField}
+
+        if tags:
+            labelField = SequenceLabelField(labels = tags,
+                                            sequence_field= sentenceField)
+            fields["labels"] = labelField
+
+
+        return Instance(fields = fields)
+
+
+    def _read(self, filePath: str) -> Iterator[Instance]:
+        with open(filePath) as f:
+            for line in f:
+                pairs = line.strip().split()
+                sentence, tags = zip(*(pair.split("###") for pair in pairs))
+                yield self.text_to_instance([Token(word) for word in sentence], tags)
+
+
+\end{pythonCode} 
+
+
+
+
+
+% -------------------------------------------
+
+
+\subsection*{Step 2: Create the \pythoninline{LstmTagger} Class}
+
+In general for AllenNLP, we always must implement classes inheriting from \pythoninline{DatasetReader} and \pythoninline{Model} class. Here, the \pythoninline{LstmTagger} class inherits from the \pythoninline{Model} class. Since \pythoninline{Model} is a subclass of \pythoninline{torch.nn.Module}, it must implement a \pythoninline{forward} method that takes tensor inputs and produces a dictionary of tensor outputs that include the loss for training the model. The components of \pythoninline{LstmTagger} are: 
+
+\begin{itemizeSpaced}{3pt}
+    \item \pythoninline{__init__()}: One thing that might seem unusual is that we're going pass in the embedder and the sequence encoder as constructor parameters. This allows us to experiment with different embedders and encoders without having to change the model code. 
+% * `wordEmbeddings: TextFieldEmbedder`: the embedding layer is specified as an AllenNLP `TextFieldEmbedder` which represents a general way of turning tokens into tensors.  (Here we know that we want to represent each unique word with a learned tensor, but using the general class allows us to easily experiment with different types of embeddings, for example ELMo.)
+% * `encoder: Seq2SeqEncoder`: Similarly, the encoder is specified as a general `Seq2SeqEncoder` even though we know we want to use an LSTM. Again, this makes it easy to experiment with other sequence encoders, for example a Transformer.
+% * `vocab: Vocabulary`: Every AllenNLP model also expects a `Vocabulary`, which contains the namespaced mappings of tokens to indices and labels to indices.
+% 
+% ### `forward()` method
+% Actual computation happens here.
+% Each `Instance` in the data set will get batched with other `Instance`s and fed into `forward`.
+% Arguments: dicts of tensors, with names equal to the names of the fields in the `Instance`.
+% * NOTE: In this case we have a sentence field and possibly a labels field so we will construct the `forward` method accordingly.
+% 
+% ### `get_metrics()` method:
+% We included an accuracy metric that gets updated each forward pass. That means we need to override a get_metrics method that pulls the data out of it. Behind the scenes, the `CategoricalAccuracy` metric is storing the number of predictions and the number of correct predictions, updating those counts during each call to forward. Each call to `get_metric` returns the calculated accuracy and (optionally) resets the counts, which is what allows us to track accuracy anew for each epoch.
+
+
+\end{itemizeSpaced}
+
+
+\begin{pythonCode}
+
+class LstmTagger(Model):
+
+    def __init__(self,
+                 wordEmbeddings: TextFieldEmbedder,
+                 encoder: Seq2SeqEncoder,
+                 vocab: Vocabulary) -> None:
+
+        # Notice: we have to pass the vocab to the base class constructor
+        super().__init__(vocab)
+
+        self.wordEmbeddings: TextFieldEmbedder = wordEmbeddings
+        self.encoder: Seq2SeqEncoder = encoder
+
+        # The feed forward layer is not passed in as parameter.
+        # Instead we construct it here.
+        # It gets encoder's output dimension as the feedforward layer's input dimension
+        # and uses vocab's size as the feedforward layer's output dimension.
+        self.hiddenToTagLayer = torch.nn.Linear(in_features = encoder.get_output_dim(),
+                                                out_features= vocab.get_vocab_size(namespace = 'labels'))
+
+        # Instantiate an accuracy metric to track it during training
+        # and validation epochs.
+        self.accuracy = CategoricalAccuracy()
+
+
+
+    def forward(self,
+                sentence: Dict[str, Tensor],
+                labels: Tensor = None) -> Dict[str, Tensor]:
+
+
+        # Step 1: Create the masks
+
+        # AllenNLP is designed to operate on batched inputs, but
+        # different input sequences have different lengths. Behind the scenes AllenNLP is
+        # padding the shorter inputs so that the batch has uniform shape, which means our
+        # computations need to use a mask to exclude the padding. Here we just use the utility
+        # function get_text_field_mask, which returns a tensor of 0s and 1s corresponding to
+        # the padded and unpadded locations.
+        mask: Tensor = get_text_field_mask(text_field_tensors= sentence)
+
+
+        # Step 2: create the tensor embeddings
+
+        # We start by passing the sentence tensor (each sentence a sequence of token ids)
+        # to the word_embeddings module, which converts each sentence into a sequence
+        # of embedded tensors.
+
+        # Does forward pass of word embeddings layer
+        embeddings: Tensor = self.wordEmbeddings(sentence)
+
+
+        # Step 3: Encode the embeddings using mask
+
+        # We next pass the embedded tensors (and the mask) to the LSTM,
+        # which produces a sequence of encoded outputs.
+
+        # Does forward pass of encoder layer
+        encoderOutputs: Tensor = self.encoder(embeddings, mask)
+
+
+        # Step 4: Finally, we pass each encoded output tensor to the feedforward
+        # layer to produce logits corresponding to the various tags.
+
+        # Does forward pass of the linear layer
+        tagLogits = self.hiddenToTagLayer(encoderOutputs)
+        output = {"tagLogits": tagLogits}
+
+
+        # As before, the labels were optional, as we might want to run this model to
+        # make predictions on unlabeled data. If we do have labels, then we use them
+        # to update our accuracy metric and compute the "loss" that goes in our output.
+        if labels is not None:
+            self.accuracy(predictions = tagLogits, gold_labels = labels, mask = mask)
+            output["loss"] = sequence_cross_entropy_with_logits(logits = tagLogits,
+                                                                targets = labels,
+                                                                weights = mask)
+
+        return output
+
+
+
+    def get_metrics(self, reset: bool = False) -> Dict[str, float]:
+        return {"accuracy": self.accuracy.get_metric(reset)}
+\end{pythonCode}
